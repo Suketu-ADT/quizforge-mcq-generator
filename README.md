@@ -11,7 +11,7 @@ Turn notes, PDFs and documents into validated multiple-choice quizzes - **entire
 ![Ollama](https://img.shields.io/badge/LLM%20runtime-Ollama-000000)
 ![Model](https://img.shields.io/badge/Model-Qwen%202.5-6E56CF)
 ![Storage](https://img.shields.io/badge/Storage-SQLite-003B57?logo=sqlite&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-144%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-178%20passing-brightgreen)
 ![Cloud AI](https://img.shields.io/badge/cloud%20AI-none-informational)
 
 </div>
@@ -191,6 +191,10 @@ Use the same fixed test set (for example 3 documents x 10 questions) on each mod
 Sample observations from development (`qwen2.5:3b`, CPU only, small samples - not a benchmark): about 8-10 tokens/s; one run produced 4 valid questions in ~124 s; one 10-question run yielded 8 valid questions from 22 candidates (acceptance about 36%).
 Quiz accuracy (`correct / total x 100`) measures the *student*, not the model.
 
+**Run the evaluation yourself:** `python evaluation/evaluate_llm.py --models qwen2.5:3b qwen2.5:7b` gives each model a labelled 40-question test and prints
+Accuracy, Exact Match, Precision, Recall, F1 (macro / micro / weighted), Top-k, MCC, Cohen's kappa, log loss, Brier score and ECE **with every calculation shown**.
+See [`evaluation/README.md`](evaluation/README.md) for how each metric is computed and how to explain it.
+
 ## Project structure
 ```
 quizforge-mcq-generator/
@@ -214,7 +218,8 @@ quizforge-mcq-generator/
 |   `-- repository.py          # All SQL (parameterised)
 |-- pages/                     # Dashboard, Generate, Question Bank, Quiz, Analytics, Settings, About
 |-- components/                # CSS/themes, sidebar, question cards, charts, downloads
-|-- tests/                     # 144 tests (mocked Ollama, headless UI, one live test)
+|-- evaluation/                # LLM performance evaluation (metrics with worked calculations)
+|-- tests/                     # 178 tests (mocked Ollama, headless UI, one live test)
 |-- docs/VIVA_PREP.md          # Jury questions and answers
 `-- data/                      # SQLite database lives here (git-ignored)
 ```
@@ -225,7 +230,7 @@ python -m pytest -v                          # everything (the live test is skip
 python -m pytest -m "not integration"        # offline tests only
 python -m pytest tests/test_integration_ollama.py -v -m integration   # live Qwen test
 ```
-**144 tests** cover: schema and validation rules, malformed model JSON, duplicate detection, extraction and chunking, scoring (including unanswered questions, retakes and reset), SQLite CRUD and rollback, exports (JSON, CSV, HTML, PDF), the Ollama client (unavailable, timeout, missing model, streaming), generator retry bounds, and headless UI flows with Streamlit's `AppTest` (submit, resume, Stop, draft restore, retry-missed). Ollama is mocked in the unit tests, so no model is needed.
+**178 tests** cover: schema and validation rules, malformed model JSON, duplicate detection, extraction and chunking, scoring (including unanswered questions, retakes and reset), SQLite CRUD and rollback, exports (JSON, CSV, HTML, PDF), the Ollama client (unavailable, timeout, missing model, streaming), generator retry bounds, and headless UI flows with Streamlit's `AppTest` (submit, resume, Stop, draft restore, retry-missed). Ollama is mocked in the unit tests, so no model is needed.
 
 ## Privacy and security
 - **No cloud AI.** Inference goes only to the configured Ollama URL; the Settings page warns if it is not on this computer.

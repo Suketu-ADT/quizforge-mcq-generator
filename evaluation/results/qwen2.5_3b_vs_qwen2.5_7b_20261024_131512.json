@@ -1,0 +1,1646 @@
+{
+  "labels": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "runs": [
+    {
+      "model": "qwen2.5:3b",
+      "predictions": [
+        {
+          "id": "Q01",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 9.217969468867381e-12,
+            "B": 6.722929071748706e-10,
+            "C": 0.9999999992509612,
+            "D": 6.752805242964616e-11
+          },
+          "raw": "C",
+          "latency_s": 0.175884,
+          "prompt_tokens": 122,
+          "prompt_tps": 1474.623185427822,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q21",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999245081616,
+            "B": 7.347539388155253e-08,
+            "C": 2.04304629743872e-10,
+            "D": 1.8121398849796666e-09
+          },
+          "raw": "A",
+          "latency_s": 0.4068832,
+          "prompt_tokens": 86,
+          "prompt_tps": 270.7186320524565,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q02",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 8.83300277574531e-12,
+            "B": 1.351969606453437e-09,
+            "C": 2.832632478164103e-11,
+            "D": 0.999999998610871
+          },
+          "raw": "D",
+          "latency_s": 0.1796084,
+          "prompt_tokens": 128,
+          "prompt_tps": 1450.9346059238937,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q22",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 1.3151969582982518e-12,
+            "B": 0.9999999998866635,
+            "C": 3.864952174455436e-12,
+            "D": 1.0815637617047628e-10
+          },
+          "raw": "B",
+          "latency_s": 0.4002787,
+          "prompt_tokens": 93,
+          "prompt_tps": 297.2034117673377,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q03",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 7.941893644488716e-10,
+            "B": 0.9996964162582401,
+            "C": 0.00030357258017242643,
+            "D": 1.0367397997043387e-08
+          },
+          "raw": "B",
+          "latency_s": 0.1700276,
+          "prompt_tokens": 151,
+          "prompt_tps": 1870.756727290748,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q23",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 5.886001466878858e-12,
+            "B": 3.0269819464361937e-09,
+            "C": 2.3500093844039902e-12,
+            "D": 0.9999999969647819
+          },
+          "raw": "D",
+          "latency_s": 0.3441595,
+          "prompt_tokens": 83,
+          "prompt_tps": 320.81138223323376,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q04",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 5.466426873288074e-12,
+            "B": 2.936290834031217e-10,
+            "C": 0.9999999996875817,
+            "D": 1.3322778609793143e-11
+          },
+          "raw": "C",
+          "latency_s": 0.1716699,
+          "prompt_tokens": 127,
+          "prompt_tps": 1578.7380040773705,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q24",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 1.5062359250130543e-09,
+            "B": 0.9999999754513033,
+            "C": 1.439932923199986e-09,
+            "D": 2.1602527841552842e-08
+          },
+          "raw": "B",
+          "latency_s": 0.3574801,
+          "prompt_tokens": 83,
+          "prompt_tps": 310.8637517884029,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q05",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 4.523411796900541e-10,
+            "B": 0.9999999978540204,
+            "C": 8.654948839561233e-10,
+            "D": 8.281434572992583e-10
+          },
+          "raw": "B",
+          "latency_s": 0.1699203,
+          "prompt_tokens": 102,
+          "prompt_tps": 1267.1751931821007,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q25",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 5.141282897925312e-07,
+            "B": 0.9997447009742052,
+            "C": 3.7278209216160304e-05,
+            "D": 0.00021750668828895926
+          },
+          "raw": "B",
+          "latency_s": 0.4389812,
+          "prompt_tokens": 98,
+          "prompt_tps": 280.48724641663233,
+          "category": "closed-book",
+          "difficulty": "hard",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q06",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 1.8119541243298374e-08,
+            "B": 8.010560370381465e-08,
+            "C": 0.9999998982660319,
+            "D": 3.5088231670758948e-09
+          },
+          "raw": "C",
+          "latency_s": 0.1744833,
+          "prompt_tokens": 150,
+          "prompt_tps": 1873.7352287206136,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q26",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 2.6108427118441062e-11,
+            "B": 5.605661116305888e-09,
+            "C": 1.015439832386439e-11,
+            "D": 0.999999994358076
+          },
+          "raw": "D",
+          "latency_s": 0.4082257,
+          "prompt_tokens": 95,
+          "prompt_tps": 302.7377048657916,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q07",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 2.800360432045519e-09,
+            "B": 1.3572151376824761e-08,
+            "C": 1.0101208920431686e-09,
+            "D": 0.9999999826173672
+          },
+          "raw": "D",
+          "latency_s": 0.1698117,
+          "prompt_tokens": 125,
+          "prompt_tps": 1554.9004241768357,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q27",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.999999997871954,
+            "B": 2.0607369382909333e-09,
+            "C": 3.39884775491277e-11,
+            "D": 3.3320465718355844e-11
+          },
+          "raw": "A",
+          "latency_s": 0.3874154,
+          "prompt_tokens": 93,
+          "prompt_tps": 315.08227713010865,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q08",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 4.513676993576663e-12,
+            "B": 0.999999999903832,
+            "C": 3.109276313006351e-11,
+            "D": 6.056143427259699e-11
+          },
+          "raw": "B",
+          "latency_s": 0.1697298,
+          "prompt_tokens": 132,
+          "prompt_tps": 1643.6718633261942,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q28",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999999983216,
+            "B": 1.0090910604907408e-12,
+            "C": 4.745361237206045e-14,
+            "D": 6.218359503358921e-13
+          },
+          "raw": "A",
+          "latency_s": 0.3611865,
+          "prompt_tokens": 84,
+          "prompt_tps": 304.8072457036693,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q09",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 4.454523006682065e-10,
+            "B": 1.9799712101405113e-08,
+            "C": 0.999999979504745,
+            "D": 2.5009065668176973e-10
+          },
+          "raw": "C",
+          "latency_s": 0.1662361,
+          "prompt_tokens": 121,
+          "prompt_tps": 1512.2353588122078,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q29",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 1.2917451304058878e-07,
+            "B": 2.8278218265389137e-06,
+            "C": 9.1086924498951e-10,
+            "D": 0.9999970420927912
+          },
+          "raw": "D",
+          "latency_s": 0.5872332,
+          "prompt_tokens": 129,
+          "prompt_tps": 260.4666188808012,
+          "category": "closed-book",
+          "difficulty": "hard",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q10",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 1.169303095215266e-12,
+            "B": 1.0043291045608044e-12,
+            "C": 1.6279560723428394e-12,
+            "D": 0.9999999999961984
+          },
+          "raw": "D",
+          "latency_s": 0.1719631,
+          "prompt_tokens": 130,
+          "prompt_tps": 1611.6834653674018,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q30",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 1.327465626061965e-06,
+            "B": 0.999998671059703,
+            "C": 2.228599016579697e-10,
+            "D": 1.2518111549642636e-09
+          },
+          "raw": "B",
+          "latency_s": 0.432183,
+          "prompt_tokens": 98,
+          "prompt_tps": 286.10382065377644,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q11",
+          "gold": "B",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999862915232623,
+            "B": 1.3690757388680014e-05,
+            "C": 9.512897821433296e-09,
+            "D": 8.206451202061596e-09
+          },
+          "raw": "A",
+          "latency_s": 0.1690172,
+          "prompt_tokens": 110,
+          "prompt_tps": 1353.6628887166046,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q31",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 4.314254818702632e-13,
+            "B": 1.1919926124960706e-12,
+            "C": 3.353612913295137e-13,
+            "D": 0.9999999999980411
+          },
+          "raw": "D",
+          "latency_s": 0.3693734,
+          "prompt_tokens": 85,
+          "prompt_tps": 299.6809279531792,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q12",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 5.3008936226968756e-11,
+            "B": 1.2708787369640052e-10,
+            "C": 4.42899707457481e-10,
+            "D": 0.9999999993770035
+          },
+          "raw": "D",
+          "latency_s": 0.1715439,
+          "prompt_tokens": 116,
+          "prompt_tps": 1426.8142681426814,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q32",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999999563949,
+            "B": 2.2080728133286733e-11,
+            "C": 2.605816656852595e-12,
+            "D": 1.8918663536103838e-11
+          },
+          "raw": "A",
+          "latency_s": 0.3874786,
+          "prompt_tokens": 93,
+          "prompt_tps": 309.70784226879306,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q13",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 5.90642743570543e-11,
+            "B": 9.690513391262709e-10,
+            "C": 0.9999999978417198,
+            "D": 1.1301645904862177e-09
+          },
+          "raw": "C",
+          "latency_s": 0.1702681,
+          "prompt_tokens": 121,
+          "prompt_tps": 1503.6285913112636,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q33",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 1.2067539437128283e-09,
+            "B": 4.009063367381408e-07,
+            "C": 0.9999995950976952,
+            "D": 2.7892140084560707e-09
+          },
+          "raw": "C",
+          "latency_s": 0.3467172,
+          "prompt_tokens": 83,
+          "prompt_tps": 320.97514569564595,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q14",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 4.237141094994187e-09,
+            "B": 2.399620405555831e-08,
+            "C": 0.9999999184692117,
+            "D": 5.3297443186450325e-08
+          },
+          "raw": "C",
+          "latency_s": 0.171021,
+          "prompt_tokens": 116,
+          "prompt_tps": 1422.2135036720083,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q34",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 1.9825635613824836e-08,
+            "B": 4.206894895919761e-09,
+            "C": 0.9999999693148724,
+            "D": 6.6525969142412954e-09
+          },
+          "raw": "C",
+          "latency_s": 0.4250782,
+          "prompt_tokens": 96,
+          "prompt_tps": 288.60375906396183,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q15",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 0.06580340798088413,
+            "B": 8.485337997635788e-08,
+            "C": 3.9683749161378453e-08,
+            "D": 0.9341964674819867
+          },
+          "raw": "D",
+          "latency_s": 0.1696837,
+          "prompt_tokens": 126,
+          "prompt_tps": 1554.9988275802489,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q35",
+          "gold": "C",
+          "pred": "B",
+          "probs": {
+            "A": 6.35860955975143e-11,
+            "B": 0.9999998398469258,
+            "C": 1.6006069522919398e-07,
+            "D": 2.8792875499837615e-11
+          },
+          "raw": "B",
+          "latency_s": 0.3834058,
+          "prompt_tokens": 95,
+          "prompt_tps": 323.3899435939856,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q16",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999890117927,
+            "B": 8.103219829135335e-09,
+            "C": 2.4786405720392445e-09,
+            "D": 4.063470005754157e-10
+          },
+          "raw": "A",
+          "latency_s": 0.1678059,
+          "prompt_tokens": 123,
+          "prompt_tps": 1514.2375260067217,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q36",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 2.645955169258581e-11,
+            "B": 3.772514472463862e-11,
+            "C": 0.999999999926211,
+            "D": 9.604313971012115e-12
+          },
+          "raw": "C",
+          "latency_s": 0.3012097,
+          "prompt_tokens": 77,
+          "prompt_tps": 360.23223283165925,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q17",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999952513061,
+            "B": 3.031014534896336e-09,
+            "C": 2.8680857164274953e-10,
+            "D": 1.4308708246566732e-09
+          },
+          "raw": "A",
+          "latency_s": 0.5383689,
+          "prompt_tokens": 118,
+          "prompt_tps": 260.0550964187328,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q37",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999999949589,
+            "B": 4.8742900084279815e-12,
+            "C": 4.522746942203246e-14,
+            "D": 1.2163693274076916e-13
+          },
+          "raw": "A",
+          "latency_s": 0.3488722,
+          "prompt_tokens": 79,
+          "prompt_tps": 305.35295440714356,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q18",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 4.438653051192332e-05,
+            "B": 0.9999555774926941,
+            "C": 3.1603358455348154e-08,
+            "D": 4.373435503273034e-09
+          },
+          "raw": "B",
+          "latency_s": 0.6080669,
+          "prompt_tokens": 119,
+          "prompt_tps": 229.5613256684286,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q38",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 4.93253179152838e-14,
+            "B": 1.3448889433372704e-13,
+            "C": 5.364833759242133e-14,
+            "D": 0.9999999999997626
+          },
+          "raw": "D",
+          "latency_s": 0.3206765,
+          "prompt_tokens": 78,
+          "prompt_tps": 331.55230237569975,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q19",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 1.9194985931539665e-10,
+            "B": 0.9999999988643467,
+            "C": 3.564954253883014e-10,
+            "D": 5.872080448341156e-10
+          },
+          "raw": "B",
+          "latency_s": 0.5643748,
+          "prompt_tokens": 118,
+          "prompt_tps": 245.91940512512713,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q39",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999999660394,
+            "B": 2.915651459204233e-11,
+            "C": 2.7555055248387863e-12,
+            "D": 2.0487023059439305e-12
+          },
+          "raw": "A",
+          "latency_s": 0.3714172,
+          "prompt_tokens": 89,
+          "prompt_tps": 310.4647552735404,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q20",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 1.196808590440235e-12,
+            "B": 8.671248780979093e-12,
+            "C": 1.9784949383912225e-12,
+            "D": 0.9999999999881535
+          },
+          "raw": "D",
+          "latency_s": 0.170803,
+          "prompt_tokens": 125,
+          "prompt_tps": 1557.4577305971916,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q40",
+          "gold": "A",
+          "pred": "B",
+          "probs": {
+            "A": 0.0678418173373564,
+            "B": 0.8908021925369488,
+            "C": 0.04130856117745039,
+            "D": 4.7428948244462444e-05
+          },
+          "raw": "B",
+          "latency_s": 0.4540516,
+          "prompt_tokens": 102,
+          "prompt_tps": 277.1038840727751,
+          "category": "closed-book",
+          "difficulty": "hard",
+          "prob_source": "logprobs"
+        }
+      ],
+      "speed": {
+        "eval_count": 128,
+        "eval_seconds": 9.927153,
+        "tokens_per_second": 12.89392840021706
+      },
+      "timestamp": "2026-10-24T13:14:10",
+      "simulated": false,
+      "metrics": [
+        {
+          "name": "Accuracy",
+          "value": 0.925,
+          "better": "higher",
+          "formula": "correct predictions / total predictions"
+        },
+        {
+          "name": "Exact Match (EM)",
+          "value": 0.925,
+          "better": "higher",
+          "formula": "predictions identical to the expected answer string / total"
+        },
+        {
+          "name": "Precision (macro)",
+          "value": 0.9267676767676768,
+          "better": "higher",
+          "formula": "TP / (TP + FP), computed per option letter then averaged"
+        },
+        {
+          "name": "Recall (macro)",
+          "value": 0.9222222222222223,
+          "better": "higher",
+          "formula": "TP / (TP + FN), computed per option letter then averaged"
+        },
+        {
+          "name": "F1-score (per class)",
+          "value": 0.9233500417710945,
+          "better": "higher",
+          "formula": "2 * P * R / (P + R)"
+        },
+        {
+          "name": "Macro-F1",
+          "value": 0.9233500417710945,
+          "better": "higher",
+          "formula": "mean of per-class F1 (every class counts equally)"
+        },
+        {
+          "name": "Micro-F1",
+          "value": 0.925,
+          "better": "higher",
+          "formula": "F1 from globally pooled TP, FP, FN"
+        },
+        {
+          "name": "Weighted-F1",
+          "value": 0.9261278195488722,
+          "better": "higher",
+          "formula": "mean of per-class F1 weighted by support"
+        },
+        {
+          "name": "Top-k accuracy",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "fraction of questions whose correct option is among the k most probable"
+        },
+        {
+          "name": "Matthews Correlation Coefficient (MCC)",
+          "value": 0.9005851095942539,
+          "better": "higher",
+          "formula": "(c*s - sum(p_k*t_k)) / sqrt((s^2 - sum p_k^2) * (s^2 - sum t_k^2))"
+        },
+        {
+          "name": "Cohen's kappa",
+          "value": 0.8998330550918198,
+          "better": "higher",
+          "formula": "(p_o - p_e) / (1 - p_e)"
+        },
+        {
+          "name": "Log loss (cross-entropy)",
+          "value": 0.7401438954991918,
+          "better": "lower",
+          "formula": "-(1/N) * sum( ln p(correct option) )"
+        },
+        {
+          "name": "Brier score",
+          "value": 0.14181897200608132,
+          "better": "lower",
+          "formula": "(1/N) * sum over questions of sum over options (p_option - y_option)^2"
+        },
+        {
+          "name": "Expected Calibration Error (ECE)",
+          "value": 0.07060941017637844,
+          "better": "lower",
+          "formula": "sum over bins of (n_bin / N) * |accuracy_bin - confidence_bin|"
+        }
+      ]
+    },
+    {
+      "model": "qwen2.5:7b",
+      "predictions": [
+        {
+          "id": "Q01",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 0.0,
+            "B": 1.0123495447901801e-11,
+            "C": 0.9999999976592231,
+            "D": 2.330653447018528e-09
+          },
+          "raw": "C",
+          "latency_s": 0.3584111,
+          "prompt_tokens": 122,
+          "prompt_tps": 693.9506839964735,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q21",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999910544214,
+            "B": 1.1237654931853575e-09,
+            "C": 9.324111673479937e-10,
+            "D": 6.889401889900448e-09
+          },
+          "raw": "A",
+          "latency_s": 0.7731786,
+          "prompt_tokens": 86,
+          "prompt_tps": 145.35399613628795,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q02",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 1.6683773336888956e-09,
+            "B": 4.66772138564446e-10,
+            "C": 6.227018202892069e-11,
+            "D": 0.9999999978025804
+          },
+          "raw": "D",
+          "latency_s": 0.3699719,
+          "prompt_tokens": 128,
+          "prompt_tps": 729.585846034587,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q22",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 3.1576544218830955e-12,
+            "B": 0.9999999996261963,
+            "C": 5.961577675443381e-12,
+            "D": 3.646843586732717e-10
+          },
+          "raw": "B",
+          "latency_s": 0.9138801,
+          "prompt_tokens": 93,
+          "prompt_tps": 127.58846819754535,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q03",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 3.896341404320666e-09,
+            "B": 0.9251115466766991,
+            "C": 0.07487893370164105,
+            "D": 9.515725318426932e-06
+          },
+          "raw": "B",
+          "latency_s": 0.3622636,
+          "prompt_tokens": 151,
+          "prompt_tps": 858.5936122909666,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q23",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 3.137406497369711e-11,
+            "B": 1.9156436157076764e-10,
+            "C": 6.921941697013484e-11,
+            "D": 0.9999999997078421
+          },
+          "raw": "D",
+          "latency_s": 0.7398066,
+          "prompt_tokens": 83,
+          "prompt_tps": 150.91128598234155,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q04",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 1.9124436123628414e-12,
+            "B": 3.989073133718942e-10,
+            "C": 0.9999999993676449,
+            "D": 2.315352851759338e-10
+          },
+          "raw": "C",
+          "latency_s": 0.3588353,
+          "prompt_tokens": 127,
+          "prompt_tps": 726.6776526595257,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q24",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 6.1316669226054496e-12,
+            "B": 0.999999999577524,
+            "C": 3.2595316819836535e-11,
+            "D": 3.8374909274643425e-10
+          },
+          "raw": "B",
+          "latency_s": 0.7502467,
+          "prompt_tokens": 83,
+          "prompt_tps": 145.70324637365684,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q05",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 1.5397135184458452e-12,
+            "B": 0.9999999998609506,
+            "C": 1.5333225061286843e-11,
+            "D": 1.2217656123424647e-10
+          },
+          "raw": "B",
+          "latency_s": 0.3640247,
+          "prompt_tokens": 102,
+          "prompt_tps": 585.2180797962064,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q25",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 2.7611494893366083e-09,
+            "B": 0.9999964940316828,
+            "C": 4.570200784890583e-09,
+            "D": 3.498636966919754e-06
+          },
+          "raw": "B",
+          "latency_s": 1.0038486,
+          "prompt_tokens": 98,
+          "prompt_tps": 121.30109034827028,
+          "category": "closed-book",
+          "difficulty": "hard",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q06",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 6.681631404943735e-12,
+            "B": 3.9376670449497474e-11,
+            "C": 0.999999999646437,
+            "D": 3.075047226712028e-10
+          },
+          "raw": "C",
+          "latency_s": 0.3722702,
+          "prompt_tokens": 150,
+          "prompt_tps": 827.8374127321395,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q26",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 1.906875344553535e-11,
+            "B": 1.8610896322520954e-08,
+            "C": 1.2853346845422303e-10,
+            "D": 0.9999999812415014
+          },
+          "raw": "D",
+          "latency_s": 0.9939617,
+          "prompt_tokens": 95,
+          "prompt_tps": 118.50366051570298,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q07",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 1.2035507626347338e-11,
+            "B": 5.2587590048023316e-11,
+            "C": 1.2374878438268892e-11,
+            "D": 0.999999999923002
+          },
+          "raw": "D",
+          "latency_s": 0.3630953,
+          "prompt_tokens": 125,
+          "prompt_tps": 712.4618120468743,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q27",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999992542052,
+            "B": 5.667496955181815e-10,
+            "C": 3.135240989297976e-11,
+            "D": 1.4769273033311465e-10
+          },
+          "raw": "A",
+          "latency_s": 0.8440253,
+          "prompt_tokens": 93,
+          "prompt_tps": 141.09593613360724,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q08",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 0.0,
+            "B": 0.9999999998160856,
+            "C": 6.8246652125738056e-12,
+            "D": 1.7708969207840668e-10
+          },
+          "raw": "B",
+          "latency_s": 0.3658867,
+          "prompt_tokens": 132,
+          "prompt_tps": 751.8968306409351,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q28",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999997698643,
+            "B": 1.7982287679271167e-10,
+            "C": 2.2019744809883177e-11,
+            "D": 2.8293170931095417e-11
+          },
+          "raw": "A",
+          "latency_s": 0.7915784,
+          "prompt_tokens": 84,
+          "prompt_tps": 139.35501852260455,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q09",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 1.0993793143378779e-11,
+            "B": 1.4721762718779806e-11,
+            "C": 0.9999999997633939,
+            "D": 2.1089048204119606e-10
+          },
+          "raw": "C",
+          "latency_s": 0.3757817,
+          "prompt_tokens": 121,
+          "prompt_tps": 678.5744328856238,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q29",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 3.735298944692027e-10,
+            "B": 4.1294074420786125e-09,
+            "C": 2.7106661344014383e-11,
+            "D": 0.9999999954699559
+          },
+          "raw": "D",
+          "latency_s": 1.3767525,
+          "prompt_tokens": 129,
+          "prompt_tps": 108.16349289265234,
+          "category": "closed-book",
+          "difficulty": "hard",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q10",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 1.8373025448718124e-09,
+            "B": 1.0322051740008643e-09,
+            "C": 1.2789202658292563e-10,
+            "D": 0.9999999970026003
+          },
+          "raw": "D",
+          "latency_s": 0.3616739,
+          "prompt_tokens": 130,
+          "prompt_tps": 733.7585369983632,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q30",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 2.2431871561792597e-11,
+            "B": 0.9999999993163471,
+            "C": 1.4698082650739827e-11,
+            "D": 6.465229724924961e-10
+          },
+          "raw": "B",
+          "latency_s": 0.9739295,
+          "prompt_tokens": 98,
+          "prompt_tps": 125.2935769142749,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q11",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 0.0009410243966455577,
+            "B": 0.9990437742295964,
+            "C": 7.969125898074919e-06,
+            "D": 7.232247859907243e-06
+          },
+          "raw": "B",
+          "latency_s": 0.3646395,
+          "prompt_tokens": 110,
+          "prompt_tps": 622.1613886642195,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q31",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 2.0145804651596057e-11,
+            "B": 8.934435078880703e-11,
+            "C": 4.870389321830363e-11,
+            "D": 0.9999999998418059
+          },
+          "raw": "D",
+          "latency_s": 0.8714353,
+          "prompt_tokens": 85,
+          "prompt_tps": 137.43081975058732,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q12",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 3.5624546782285125e-09,
+            "B": 6.68621151859085e-11,
+            "C": 1.8253347624904015e-10,
+            "D": 0.9999999961881496
+          },
+          "raw": "D",
+          "latency_s": 0.3616385,
+          "prompt_tokens": 116,
+          "prompt_tps": 659.038485575011,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q32",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.999999999241761,
+            "B": 5.2912164611100897e-11,
+            "C": 8.967641535493535e-11,
+            "D": 6.15650551881643e-10
+          },
+          "raw": "A",
+          "latency_s": 0.8874405,
+          "prompt_tokens": 93,
+          "prompt_tps": 133.05939313470762,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q13",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 0.0,
+            "B": 3.9704110325126846e-12,
+            "C": 0.9999999973069784,
+            "D": 2.6890511005027797e-09
+          },
+          "raw": "C",
+          "latency_s": 0.3578644,
+          "prompt_tokens": 121,
+          "prompt_tps": 689.4822615018177,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q33",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 1.0540331208673412e-11,
+            "B": 5.607377108408857e-11,
+            "C": 0.9999999997116065,
+            "D": 2.2177945084109603e-10
+          },
+          "raw": "C",
+          "latency_s": 0.769962,
+          "prompt_tokens": 83,
+          "prompt_tps": 141.32903783872143,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q14",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 1.3662829259274631e-11,
+            "B": 3.4157105592810542e-12,
+            "C": 0.9999999998591098,
+            "D": 1.2381164783326823e-10
+          },
+          "raw": "C",
+          "latency_s": 0.3600169,
+          "prompt_tokens": 116,
+          "prompt_tps": 655.8155575280276,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q34",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 4.615717192201002e-10,
+            "B": 1.3940532286610401e-09,
+            "C": 0.9999999975264364,
+            "D": 6.179387286943733e-10
+          },
+          "raw": "C",
+          "latency_s": 0.9471733,
+          "prompt_tokens": 96,
+          "prompt_tps": 125.73789150653641,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q15",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 4.070703873262407e-08,
+            "B": 2.632987835574899e-10,
+            "C": 3.5395109892533525e-11,
+            "D": 0.9999999589942673
+          },
+          "raw": "D",
+          "latency_s": 0.3663644,
+          "prompt_tokens": 126,
+          "prompt_tps": 717.9609907861674,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q35",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 6.504497289592739e-11,
+            "B": 7.908066061441686e-06,
+            "C": 0.9999920915455405,
+            "D": 3.2335320085929576e-10
+          },
+          "raw": "C",
+          "latency_s": 0.9438166,
+          "prompt_tokens": 95,
+          "prompt_tps": 126.70653699030629,
+          "category": "closed-book",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q16",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999978378418,
+            "B": 1.6295491336037663e-09,
+            "C": 3.7597946451318257e-10,
+            "D": 1.566296529502212e-10
+          },
+          "raw": "A",
+          "latency_s": 0.3594976,
+          "prompt_tokens": 123,
+          "prompt_tps": 700.0569151963574,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q36",
+          "gold": "C",
+          "pred": "C",
+          "probs": {
+            "A": 1.4328083961140466e-11,
+            "B": 2.394528244655582e-11,
+            "C": 0.999999999811573,
+            "D": 1.5015367029184463e-10
+          },
+          "raw": "C",
+          "latency_s": 0.6712129,
+          "prompt_tokens": 77,
+          "prompt_tps": 157.67928851828566,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q17",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999998758482,
+            "B": 3.110670286676545e-11,
+            "C": 4.214472229670491e-11,
+            "D": 5.0900274389112775e-11
+          },
+          "raw": "A",
+          "latency_s": 1.2505775,
+          "prompt_tokens": 118,
+          "prompt_tps": 110.08263660975332,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q37",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999934092292,
+            "B": 9.604142785634355e-10,
+            "C": 4.753164729115567e-09,
+            "D": 8.7719175490422e-10
+          },
+          "raw": "A",
+          "latency_s": 0.7254406,
+          "prompt_tokens": 79,
+          "prompt_tps": 145.39565101362854,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q18",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 5.18379512161931e-13,
+            "B": 0.9999999994161262,
+            "C": 2.93351279117092e-11,
+            "D": 5.54020245382205e-10
+          },
+          "raw": "B",
+          "latency_s": 1.254142,
+          "prompt_tokens": 119,
+          "prompt_tps": 111.75912621268044,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q38",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 2.1093140737343016e-11,
+            "B": 1.1315703541183599e-10,
+            "C": 3.170891583584158e-11,
+            "D": 0.999999999834041
+          },
+          "raw": "D",
+          "latency_s": 0.7519269,
+          "prompt_tokens": 78,
+          "prompt_tps": 136.8495479578714,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q19",
+          "gold": "B",
+          "pred": "B",
+          "probs": {
+            "A": 0.0,
+            "B": 0.9999999998654361,
+            "C": 4.1300964228394587e-11,
+            "D": 9.326294739724807e-11
+          },
+          "raw": "B",
+          "latency_s": 1.2572437,
+          "prompt_tokens": 118,
+          "prompt_tps": 109.91324305543912,
+          "category": "context",
+          "difficulty": "medium",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q39",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.9999999986211887,
+            "B": 3.047104172115216e-10,
+            "C": 8.311686641355633e-11,
+            "D": 9.909840324911572e-10
+          },
+          "raw": "A",
+          "latency_s": 0.8452469,
+          "prompt_tokens": 89,
+          "prompt_tps": 134.54718070744605,
+          "category": "closed-book",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q20",
+          "gold": "D",
+          "pred": "D",
+          "probs": {
+            "A": 1.4729205678836824e-11,
+            "B": 2.7450992980681046e-11,
+            "C": 1.1434025758530258e-11,
+            "D": 0.9999999999463858
+          },
+          "raw": "D",
+          "latency_s": 0.3804166,
+          "prompt_tokens": 125,
+          "prompt_tps": 704.3999639347219,
+          "category": "context",
+          "difficulty": "easy",
+          "prob_source": "logprobs"
+        },
+        {
+          "id": "Q40",
+          "gold": "A",
+          "pred": "A",
+          "probs": {
+            "A": 0.8551711428874375,
+            "B": 0.03917214075727697,
+            "C": 0.10565348642251166,
+            "D": 3.229932773844832e-06
+          },
+          "raw": "A",
+          "latency_s": 1.1279574,
+          "prompt_tokens": 102,
+          "prompt_tps": 109.15430030488295,
+          "category": "closed-book",
+          "difficulty": "hard",
+          "prob_source": "logprobs"
+        }
+      ],
+      "speed": {
+        "eval_count": 128,
+        "eval_seconds": 22.280716,
+        "tokens_per_second": 5.744878216660541
+      },
+      "timestamp": "2026-10-24T13:15:12",
+      "simulated": false,
+      "metrics": [
+        {
+          "name": "Accuracy",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "correct predictions / total predictions"
+        },
+        {
+          "name": "Exact Match (EM)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "predictions identical to the expected answer string / total"
+        },
+        {
+          "name": "Precision (macro)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "TP / (TP + FP), computed per option letter then averaged"
+        },
+        {
+          "name": "Recall (macro)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "TP / (TP + FN), computed per option letter then averaged"
+        },
+        {
+          "name": "F1-score (per class)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "2 * P * R / (P + R)"
+        },
+        {
+          "name": "Macro-F1",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "mean of per-class F1 (every class counts equally)"
+        },
+        {
+          "name": "Micro-F1",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "F1 from globally pooled TP, FP, FN"
+        },
+        {
+          "name": "Weighted-F1",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "mean of per-class F1 weighted by support"
+        },
+        {
+          "name": "Top-k accuracy",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "fraction of questions whose correct option is among the k most probable"
+        },
+        {
+          "name": "Matthews Correlation Coefficient (MCC)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "(c*s - sum(p_k*t_k)) / sqrt((s^2 - sum p_k^2) * (s^2 - sum t_k^2))"
+        },
+        {
+          "name": "Cohen's kappa",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "(p_o - p_e) / (1 - p_e)"
+        },
+        {
+          "name": "Log loss (cross-entropy)",
+          "value": 0.005881570631331868,
+          "better": "lower",
+          "formula": "-(1/N) * sum( ln p(correct option) )"
+        },
+        {
+          "name": "Brier score",
+          "value": 0.0011222362267943146,
+          "better": "lower",
+          "formula": "(1/N) * sum over questions of sum over options (p_option - y_option)^2"
+        },
+        {
+          "name": "Expected Calibration Error (ECE)",
+          "value": 0.005517126437037046,
+          "better": "lower",
+          "formula": "sum over bins of (n_bin / N) * |accuracy_bin - confidence_bin|"
+        }
+      ]
+    }
+  ]
+}

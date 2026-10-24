@@ -1,0 +1,566 @@
+{
+  "name": "QuizForge evaluation set v1",
+  "note": "20 passage-based and 20 closed-book questions with a single correct answer each; the correct letter is shuffled with a fixed seed.",
+  "items": [
+    {
+      "id": "Q01",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "Deductive reasoning starts from a general rule and applies it to a particular case. Inductive reasoning observes many specific cases and proposes a general rule.",
+      "question": "Which type of reasoning starts from a general rule and applies it to a particular case?",
+      "options": {
+        "A": "Analogical",
+        "B": "Inductive",
+        "C": "Deductive",
+        "D": "Abductive"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q21",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "Which activation function outputs values strictly between 0 and 1?",
+      "options": {
+        "A": "Sigmoid",
+        "B": "Tanh",
+        "C": "ReLU",
+        "D": "Softplus"
+      },
+      "answer": "A"
+    },
+    {
+      "id": "Q02",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "Abductive reasoning looks at an observation and infers the most plausible explanation for it. For example, the road is wet, so it probably rained.",
+      "question": "'The road is wet, so it probably rained' is an example of which type of reasoning?",
+      "options": {
+        "A": "Deductive",
+        "B": "Inductive",
+        "C": "Analogical",
+        "D": "Abductive"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q22",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "What is the time complexity of binary search on a sorted array of n elements?",
+      "options": {
+        "A": "O(n)",
+        "B": "O(log n)",
+        "C": "O(1)",
+        "D": "O(n log n)"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q03",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "A laptop costs 60,000 rupees. A 10% discount is given first, and then GST of 18% is charged on the discounted price.",
+      "question": "What is the final price of the laptop?",
+      "options": {
+        "A": "70,800 rupees",
+        "B": "63,720 rupees",
+        "C": "58,320 rupees",
+        "D": "54,000 rupees"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q23",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "Which data structure follows the Last-In-First-Out principle?",
+      "options": {
+        "A": "Binary tree",
+        "B": "Queue",
+        "C": "Linked list",
+        "D": "Stack"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q04",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "BFS explores a graph level by level, guarantees the shortest path in an unweighted graph, and uses a lot of memory. DFS explores one path deeply and uses little memory.",
+      "question": "Which algorithm guarantees the shortest path in an unweighted graph?",
+      "options": {
+        "A": "Random Search",
+        "B": "Greedy Search",
+        "C": "Breadth First Search",
+        "D": "Depth First Search"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q24",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "Which of the following is a supervised learning task?",
+      "options": {
+        "A": "Dimensionality reduction",
+        "B": "Classification",
+        "C": "Density estimation",
+        "D": "Clustering"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q05",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "DFS explores one path deeply before backtracking. It uses a stack and needs low memory.",
+      "question": "Which data structure does DFS use?",
+      "options": {
+        "A": "A heap",
+        "B": "A stack",
+        "C": "A queue",
+        "D": "A hash table"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q25",
+      "category": "closed-book",
+      "difficulty": "hard",
+      "context": "",
+      "question": "What is the time complexity of building a binary heap from n unsorted elements using the bottom-up method?",
+      "options": {
+        "A": "O(log n)",
+        "B": "O(n)",
+        "C": "O(n log n)",
+        "D": "O(n squared)"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q06",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "A* evaluates nodes with f(n) = g(n) + h(n), where g(n) is the actual cost from the start to node n and h(n) is the estimated cost from node n to the goal.",
+      "question": "In A*, what does h(n) represent?",
+      "options": {
+        "A": "The number of nodes explored",
+        "B": "The depth of the search tree",
+        "C": "The estimated cost from n to the goal",
+        "D": "The actual cost from the start to n"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q26",
+      "category": "closed-book",
+      "difficulty": "medium",
+      "context": "",
+      "question": "Which of these sorting algorithms has a worst-case time complexity of O(n log n)?",
+      "options": {
+        "A": "Insertion sort",
+        "B": "Quick sort (naive pivot)",
+        "C": "Bubble sort",
+        "D": "Merge sort"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q07",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "In the ReAct framework the AI reasons, takes an action, observes the result, reasons again and then answers.",
+      "question": "In ReAct, what happens immediately after the AI takes an action?",
+      "options": {
+        "A": "It gives the final answer",
+        "B": "It restarts from the goal",
+        "C": "It deletes its earlier reasoning",
+        "D": "It observes the result"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q27",
+      "category": "closed-book",
+      "difficulty": "medium",
+      "context": "",
+      "question": "Which regularisation technique tends to produce sparse weight vectors (many weights exactly zero)?",
+      "options": {
+        "A": "L1 regularisation",
+        "B": "L2 regularisation",
+        "C": "Batch normalisation",
+        "D": "Dropout"
+      },
+      "answer": "A"
+    },
+    {
+      "id": "Q08",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "Chain-of-Thought is best for math and logic, Tree-of-Thought is best for planning, and ReAct is best for agentic AI because it uses tools and external knowledge.",
+      "question": "According to the passage, which method is best for math and logic?",
+      "options": {
+        "A": "Greedy Search",
+        "B": "Chain-of-Thought",
+        "C": "ReAct",
+        "D": "Tree-of-Thought"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q28",
+      "category": "closed-book",
+      "difficulty": "medium",
+      "context": "",
+      "question": "Which mechanism is the core of the Transformer architecture?",
+      "options": {
+        "A": "Self-attention",
+        "B": "Convolution",
+        "C": "Recurrence",
+        "D": "Max pooling"
+      },
+      "answer": "A"
+    },
+    {
+      "id": "Q09",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "Tree-of-Thought explores multiple reasoning paths. Compared with Chain-of-Thought it is slower, but it gives higher creativity and better decision quality.",
+      "question": "Which method is slower but gives better decision quality?",
+      "options": {
+        "A": "Chain-of-Thought",
+        "B": "Depth First Search",
+        "C": "Tree-of-Thought",
+        "D": "A single prompt"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q29",
+      "category": "closed-book",
+      "difficulty": "hard",
+      "context": "",
+      "question": "According to Bayes' theorem, P(A given B) equals which expression?",
+      "options": {
+        "A": "P(A given B) x P(B) / P(A)",
+        "B": "P(A) x P(B) / P(B given A)",
+        "C": "P(A) + P(B) - P(A and B)",
+        "D": "P(B given A) x P(A) / P(B)"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q10",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "STRIPS (Stanford Research Institute Problem Solver) is a classical planning formalism in which each action is defined by its preconditions and its effects.",
+      "question": "What does STRIPS stand for?",
+      "options": {
+        "A": "Standard Task Resource Planning System",
+        "B": "Simple Task Routing and Path Search",
+        "C": "Structured Tree Reasoning In Problem Solving",
+        "D": "Stanford Research Institute Problem Solver"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q30",
+      "category": "closed-book",
+      "difficulty": "medium",
+      "context": "",
+      "question": "In gradient descent, in which direction are the parameters updated?",
+      "options": {
+        "A": "Along the gradient of the loss",
+        "B": "Opposite to the gradient of the loss",
+        "C": "Perpendicular to the gradient",
+        "D": "Randomly"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q11",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "The planning cycle is: Goal, Break Tasks, Prioritize, Assign Resources, Execute, Monitor, Replan.",
+      "question": "In the planning cycle, which step comes immediately after Prioritize?",
+      "options": {
+        "A": "Break Tasks",
+        "B": "Assign Resources",
+        "C": "Execute",
+        "D": "Monitor"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q31",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "Which metric is the harmonic mean of precision and recall?",
+      "options": {
+        "A": "Log loss",
+        "B": "Accuracy",
+        "C": "ROC-AUC",
+        "D": "F1-score"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q12",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "The main sources of uncertainty are missing data, sensor errors, the user changing their mind, and changes in the environment.",
+      "question": "Which of the following is NOT listed as a source of uncertainty?",
+      "options": {
+        "A": "The user changing their mind",
+        "B": "Missing data",
+        "C": "Sensor errors",
+        "D": "Perfect information"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q32",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "Which layer in a CNN is typically used to reduce the spatial size of feature maps?",
+      "options": {
+        "A": "Pooling layer",
+        "B": "Embedding layer",
+        "C": "Softmax layer",
+        "D": "Dropout layer"
+      },
+      "answer": "A"
+    },
+    {
+      "id": "Q13",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "When the environment changes, the AI updates its plan instead of continuing with an outdated one. A delivery robot whose route is blocked finds an alternate route and continues the delivery.",
+      "question": "What is the robot's behaviour called?",
+      "options": {
+        "A": "Random wandering",
+        "B": "Breadth first search",
+        "C": "Dynamic replanning",
+        "D": "Static planning"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q33",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "Which SQL clause filters individual rows before they are grouped?",
+      "options": {
+        "A": "ORDER BY",
+        "B": "HAVING",
+        "C": "WHERE",
+        "D": "GROUP BY"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q14",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "Goal decomposition makes planning easier, allows better resource allocation, leads to faster execution and makes monitoring easier.",
+      "question": "Which of the following is NOT a benefit of goal decomposition?",
+      "options": {
+        "A": "Easier planning",
+        "B": "Easier monitoring",
+        "C": "It guarantees that no task ever fails",
+        "D": "Better resource allocation"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q34",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "What is the decimal number 10 in binary?",
+      "options": {
+        "A": "1001",
+        "B": "0101",
+        "C": "1010",
+        "D": "1100"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q15",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "Chain-of-Thought reasoning is slow, needs more computation, and may still reason incorrectly. It is, however, transparent and easy to debug.",
+      "question": "Which is a limitation of Chain-of-Thought?",
+      "options": {
+        "A": "It hides its reasoning",
+        "B": "It cannot be used for maths",
+        "C": "It can never make mistakes",
+        "D": "It needs more computation"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q35",
+      "category": "closed-book",
+      "difficulty": "medium",
+      "context": "",
+      "question": "What is the derivative of x^3 with respect to x?",
+      "options": {
+        "A": "x^2",
+        "B": "3x",
+        "C": "3x^2",
+        "D": "x^3 / 3"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q16",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "Examples of autonomous AI include AI customer support, GitHub Copilot, AI coding agents, healthcare diagnosis, banking chatbots and AI research assistants.",
+      "question": "Which of the following is NOT given as an example of autonomous AI?",
+      "options": {
+        "A": "A spreadsheet SUM formula",
+        "B": "GitHub Copilot",
+        "C": "AI coding agents",
+        "D": "Banking chatbots"
+      },
+      "answer": "A"
+    },
+    {
+      "id": "Q36",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "What is the capital city of Australia?",
+      "options": {
+        "A": "Sydney",
+        "B": "Perth",
+        "C": "Canberra",
+        "D": "Melbourne"
+      },
+      "answer": "C"
+    },
+    {
+      "id": "Q17",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "Analogical reasoning solves a new problem by recalling a similar past situation and adapting its solution. It is the basis of case-based recommendation.",
+      "question": "Case-based recommendation is based on which type of reasoning?",
+      "options": {
+        "A": "Analogical reasoning",
+        "B": "Abductive reasoning",
+        "C": "Deductive reasoning",
+        "D": "Inductive reasoning"
+      },
+      "answer": "A"
+    },
+    {
+      "id": "Q37",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "Which is the largest planet in the Solar System?",
+      "options": {
+        "A": "Jupiter",
+        "B": "Neptune",
+        "C": "Saturn",
+        "D": "Earth"
+      },
+      "answer": "A"
+    },
+    {
+      "id": "Q18",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "DFS explores one path deeply before backtracking. It uses a stack and needs low memory. It does not guarantee the shortest path.",
+      "question": "Which statement about DFS is true?",
+      "options": {
+        "A": "It uses a queue",
+        "B": "It needs low memory",
+        "C": "It guarantees the shortest path",
+        "D": "It explores level by level"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q38",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "What is the chemical symbol for sodium?",
+      "options": {
+        "A": "Sd",
+        "B": "So",
+        "C": "S",
+        "D": "Na"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q19",
+      "category": "context",
+      "difficulty": "medium",
+      "context": "ReAct is the only one of the three methods that routinely uses tools and external knowledge, which is why it is the most agent-like.",
+      "question": "Which method routinely uses tools and external knowledge?",
+      "options": {
+        "A": "Deductive reasoning",
+        "B": "ReAct",
+        "C": "Tree-of-Thought",
+        "D": "Chain-of-Thought"
+      },
+      "answer": "B"
+    },
+    {
+      "id": "Q39",
+      "category": "closed-book",
+      "difficulty": "easy",
+      "context": "",
+      "question": "What is 15 percent of 200?",
+      "options": {
+        "A": "30",
+        "B": "15",
+        "C": "20",
+        "D": "35"
+      },
+      "answer": "A"
+    },
+    {
+      "id": "Q20",
+      "category": "context",
+      "difficulty": "easy",
+      "context": "BFS explores level by level and guarantees the shortest path in an unweighted graph. Its disadvantage is high memory usage, because the whole frontier must be stored.",
+      "question": "What is a drawback of BFS?",
+      "options": {
+        "A": "It uses no data structure",
+        "B": "It cannot find the shortest path",
+        "C": "It only works on trees",
+        "D": "High memory usage"
+      },
+      "answer": "D"
+    },
+    {
+      "id": "Q40",
+      "category": "closed-book",
+      "difficulty": "hard",
+      "context": "",
+      "question": "A perfectly balanced binary search tree holds 1,023 nodes. How many levels (height in levels) does it have?",
+      "options": {
+        "A": "10",
+        "B": "9",
+        "C": "11",
+        "D": "8"
+      },
+      "answer": "A"
+    }
+  ]
+}
