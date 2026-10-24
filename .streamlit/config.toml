@@ -15,14 +15,12 @@ toolbarMode = "viewer"
 font = "sans serif"
 
 [theme.dark]
-base = "dark"
 primaryColor = "#818cf8"
 backgroundColor = "#0b1020"
 secondaryBackgroundColor = "#121a30"
 textColor = "#e6e9f2"
 
 [theme.light]
-base = "light"
 primaryColor = "#4f46e5"
 backgroundColor = "#f5f6fb"
 secondaryBackgroundColor = "#ffffff"
