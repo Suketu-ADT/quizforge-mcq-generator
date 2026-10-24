@@ -18,8 +18,18 @@ DB_PATH = Path(os.getenv("MCQ_DB_PATH", DATA_DIR / "quizzes.db"))
 
 APP_NAME = "QuizForge"
 DEFAULT_BASE_URL = "http://localhost:11434"
-DEFAULT_MODEL = "qwen2.5:7b"
+DEFAULT_MODEL = "qwen2.5:3b"
 SUPPORTED_MODELS = ["qwen2.5:3b", "qwen2.5:7b", "qwen2.5:14b"]
+
+# The two models the user can flip between. Tags are shown only on the Settings page; elsewhere the UI
+# uses the tier names ("Fast" / "Quality").
+MODEL_TIERS = [
+    {"tier": "Fast", "tag": "qwen2.5:3b", "size": "~2 GB",
+     "blurb": "Quicker and lighter on memory. Good for trying things out; answer keys are less reliable."},
+    {"tier": "Quality", "tag": "qwen2.5:7b", "size": "~4.7 GB",
+     "blurb": "Slower and needs more RAM, but writes better questions and more accurate answer keys."},
+]
+TIER_TAGS = {t["tier"]: t["tag"] for t in MODEL_TIERS}
 
 ALLOWED_EXTENSIONS = (".pdf", ".docx", ".txt")
 MAX_UPLOAD_MB = 10

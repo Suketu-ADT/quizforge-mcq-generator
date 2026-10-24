@@ -77,6 +77,8 @@ header[data-testid="stHeader"]{ background: transparent; }
 .stButton > button, .stDownloadButton > button{ border-radius:10px; font-weight:650; border:1px solid var(--qf-border); transition: transform .12s, border-color .15s, box-shadow .15s; }
 .stButton > button:hover, .stDownloadButton > button:hover{ border-color:var(--qf-accent); transform:translateY(-1px); }
 .stButton > button[kind="primary"]{ background:linear-gradient(135deg,#6366f1,#7c3aed); border:none; color:#fff; box-shadow:0 6px 18px rgba(99,102,241,.35); }
+.stButton > button:disabled, .stButton > button[kind="primary"]:disabled{ opacity:.45; cursor:not-allowed; box-shadow:none; transform:none;
+  background:var(--qf-surface-2); color:var(--qf-muted); border:1px solid var(--qf-border); }
 .stButton > button:focus-visible, .stDownloadButton > button:focus-visible, input:focus-visible, textarea:focus-visible{ outline:2px solid var(--qf-accent) !important; outline-offset:2px; }
 [data-baseweb="input"], [data-baseweb="textarea"], [data-baseweb="select"] > div{ border-radius:10px !important; }
 [data-testid="stVerticalBlockBorderWrapper"]{ border-radius:var(--qf-radius); }

@@ -51,11 +51,14 @@ def _same_model(wanted: str, installed: str) -> bool:
     return norm(wanted) == norm(installed)
 
 
+same_model = _same_model  # public alias: "qwen2.5" and "qwen2.5:latest" are the same model
+
+
 class OllamaClient:
     def __init__(
         self,
         base_url: str = "http://localhost:11434",
-        model: str = "qwen2.5:7b",
+        model: str = "qwen2.5:3b",
         temperature: float = 0.4,
         timeout_s: int = 300,
         session: requests.Session | None = None,

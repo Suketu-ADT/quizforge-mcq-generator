@@ -8,7 +8,7 @@ import streamlit as st
 from config import DB_PATH, Settings
 from database.db import Database
 from database.repository import Repository
-from services.ollama_client import OllamaClient, OllamaStatus
+from services.ollama_client import OllamaClient, OllamaStatus, same_model
 
 NAV_PAGES = [
     "Dashboard",
@@ -62,6 +62,36 @@ def get_status(force: bool = False) -> OllamaStatus:
 
 
 get_status.clear = _status_cached.clear  # type: ignore[attr-defined]
+
+
+def tier_of(model: str) -> str | None:
+    """"Fast" / "Quality" for the two switchable models, None for any other tag."""
+    from config import TIER_TAGS
+
+    return next((tier for tier, tag in TIER_TAGS.items() if same_model(tag, model)), None)
+
+
+def is_installed(model: str, status: OllamaStatus) -> bool:
+    return any(same_model(model, name) for name in status.installed_models)
+
+
+def switch_model(model: str) -> str | None:
+    """Make *model* the active model and remember it.
+
+    Returns an error message (and changes nothing) when Ollama is reachable but the model is not installed.
+    When Ollama is down the switch is accepted, because installation cannot be checked.
+    """
+    status = get_status(force=True)
+    if status.connected and not is_installed(model, status):
+        return (
+            "That model is not installed on this computer yet. Open Settings -> Model to see the exact "
+            "`ollama pull` command."
+        )
+    settings = get_settings()
+    settings.model = model
+    save_settings(settings)
+    st.session_state.pop("_warmed", None)  # preload the newly chosen model on the next Generate visit
+    return None
 
 
 def navigate(page: str) -> None:

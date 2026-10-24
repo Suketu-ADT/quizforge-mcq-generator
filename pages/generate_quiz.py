@@ -13,12 +13,12 @@ from datetime import datetime
 
 import streamlit as st
 
-from components.context import get_client, get_repo, get_settings, get_status, navigate
+from components.context import get_client, get_repo, get_settings, get_status, navigate, switch_model, tier_of
 from components.downloads import render_quiz_downloads
 from components.metrics import page_header
 from components.question_card import question_html, render_add_question, render_quiz_editor, show_flash
 from components.styles import esc
-from config import MAX_QUESTIONS, MAX_UPLOAD_MB, QUESTION_COUNT_PRESETS, QUESTION_STYLES
+from config import MAX_QUESTIONS, MAX_UPLOAD_MB, QUESTION_COUNT_PRESETS, QUESTION_STYLES, TIER_TAGS
 from models.schemas import GenerationRequest, Question, Quiz
 from services.answer_checker import check_question
 from services.document_processor import DocumentError, chunk_text, extract_text
@@ -51,6 +51,18 @@ def _handle_upload(uploaded) -> None:
     st.session_state["_upload_warnings"] = doc.warnings + (
         [f"{doc.pages} page(s) read."] if doc.pages else []
     )
+
+
+def _on_tier_change() -> None:
+    """Fast / Quality toggle. Refuses (and snaps back) if the chosen model is not installed."""
+    choice = st.session_state.get("cfg_tier")
+    if not choice:  # clicking the active segment again clears it: keep the current model
+        st.session_state["cfg_tier"] = tier_of(get_settings().model)
+        return
+    error = switch_model(TIER_TAGS[choice])
+    if error:
+        st.session_state["tier_error"] = error
+        st.session_state["cfg_tier"] = tier_of(get_settings().model)
 
 
 def _warm_up_once() -> None:
@@ -208,6 +220,13 @@ def render() -> None:
             help="The model re-answers every question without seeing its key. Questions where it disagrees get a "
                  "'review the key' badge. This is a hint, not proof either way.",
         )
+        st.session_state["cfg_tier"] = tier_of(settings.model)  # stay in sync with Settings
+        st.segmented_control(
+            "Model", list(TIER_TAGS), key="cfg_tier", on_change=_on_tier_change, selection_mode="single",
+            help="Fast is quicker; Quality is slower but more accurate. Manage models in Settings.",
+        )
+        if err := st.session_state.pop("tier_error", None):
+            st.warning(err)
         instructions = st.text_area("Optional instructions", key="cfg_instr", height=70,
                                     placeholder="e.g. Focus on definitions. Avoid questions about dates.")
 

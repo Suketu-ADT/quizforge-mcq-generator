@@ -32,7 +32,7 @@ def test_requests_keep_the_model_loaded():
 def test_warm_up_never_raises():
     ok = FakeSession(post=FakeResponse(200, {}))
     assert OllamaClient(session=ok).warm_up() is True
-    assert ok.posts[0] == {"model": "qwen2.5:7b", "keep_alive": "30m"}
+    assert ok.posts[0] == {"model": "qwen2.5:3b", "keep_alive": "30m"}
     assert OllamaClient(session=FakeSession(post=requests.ConnectionError("down"))).warm_up() is False
 
 

@@ -53,6 +53,7 @@ parses, validates, de-duplicates, stores, scores and analyses them. A human revi
 | **Input** | Paste text or upload **PDF / DOCX / TXT** (type and size validated, scans and corrupt files handled). Extracted text is shown for review before anything is generated. |
 | **Generation** | 5 / 10 / 15 / 20 or a custom number (up to 50) of questions; Easy / Medium / Hard / Mixed; 2-6 options; Conceptual / Factual / Application / Mixed styles; optional instructions. |
 | **Live and stoppable** | Questions stream in one by one as soon as they pass validation. A **Stop** button keeps everything produced so far. |
+| **Model switch** | Flip between **Fast** (`qwen2.5:3b`, default) and **Quality** (`qwen2.5:7b`) on the Settings page, or with the Fast / Quality toggle on Generate Quiz. Models that are not installed cannot be selected and show the exact `ollama pull` command. |
 | **Reliability** | JSON-schema constrained output, safe parsing, a bounded repair loop (never infinite), source-grounding check and duplicate detection. |
 | **Answer-key double-check** | Optional: the model re-answers each question *without* seeing the key; disagreements get a "review the key" badge. |
 | **Human review** | Editable cards: edit, regenerate one question, delete, add manually. The correct answer stays hidden until revealed. Edits are re-validated. |
@@ -110,14 +111,15 @@ sequenceDiagram
 
 ### 1. Install Ollama and pull a model
 ```powershell
-ollama pull qwen2.5:7b
+ollama pull qwen2.5:3b      # default ("Fast")
+ollama pull qwen2.5:7b      # optional ("Quality") - switch to it on the Settings page
 ```
 Model library: <https://ollama.com/library/qwen2.5>. API docs: <https://docs.ollama.com/api>.
 
 | Tag | Download size (approx.) | Notes |
 |---|---|---|
-| `qwen2.5:3b` | ~2 GB | Fastest, lowest quality - good for trying the app |
-| `qwen2.5:7b` | ~4.7 GB | Default, balanced |
+| `qwen2.5:3b` | ~2 GB | **Default - "Fast".** Lightest and quickest; answer keys are less reliable |
+| `qwen2.5:7b` | ~4.7 GB | **"Quality".** Slower, needs more RAM, noticeably better questions and keys |
 | `qwen2.5:14b` | ~9 GB | Best quality, needs far more memory |
 
 Speed and quality depend on your hardware; nothing here is a guarantee. (In development, `qwen2.5:3b` on a CPU-only laptop produced roughly 8-10 tokens/s.)
@@ -144,7 +146,7 @@ Settings come from environment variables (`.env`) and can be changed on the **Se
 | Variable | Default | Meaning |
 |---|---|---|
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server |
-| `OLLAMA_MODEL` | `qwen2.5:7b` | Any installed model tag |
+| `OLLAMA_MODEL` | `qwen2.5:3b` | Starting model; any installed tag works. Switch Fast / Quality on the Settings page |
 | `OLLAMA_TEMPERATURE` | `0.4` | Lower = more deterministic questions |
 | `OLLAMA_TIMEOUT` | `300` | Seconds (applies between streamed chunks) |
 | `MAX_INPUT_CHARS` | `60000` | Longer input is refused, never silently truncated |
