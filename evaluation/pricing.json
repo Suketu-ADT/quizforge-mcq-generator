@@ -1,0 +1,31 @@
+{
+  "version": "2026-10-26",
+  "currency": "USD",
+  "note": "Edit this file to change prices; the calculation code does not change. Prices are per 1,000,000 tokens. A model that is not listed here gets an UNKNOWN cost (never zero). Set compute_cost_per_hour to also charge local hardware/electricity time (reported as an estimate).",
+  "models": {
+    "qwen2.5:3b": {
+      "provider": "ollama-local",
+      "input_per_million": 0.0,
+      "output_per_million": 0.0,
+      "compute_cost_per_hour": null,
+      "effective_date": "2026-10-26",
+      "note": "Local Ollama model: no per-token charge. Hardware and electricity are not included unless compute_cost_per_hour is set."
+    },
+    "qwen2.5:7b": {
+      "provider": "ollama-local",
+      "input_per_million": 0.0,
+      "output_per_million": 0.0,
+      "compute_cost_per_hour": null,
+      "effective_date": "2026-10-26",
+      "note": "Local Ollama model: no per-token charge. Hardware and electricity are not included unless compute_cost_per_hour is set."
+    },
+    "qwen2.5:14b": {
+      "provider": "ollama-local",
+      "input_per_million": 0.0,
+      "output_per_million": 0.0,
+      "compute_cost_per_hour": null,
+      "effective_date": "2026-10-26",
+      "note": "Local Ollama model: no per-token charge. Hardware and electricity are not included unless compute_cost_per_hour is set."
+    }
+  }
+}

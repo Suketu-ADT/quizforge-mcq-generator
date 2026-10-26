@@ -1,0 +1,26 @@
+{
+  "name": "QuizForge generation test passages v1",
+  "note": "Source material for the use-case test: the app must turn each passage into multiple-choice questions. Mixed technical and general topics.",
+  "passages": [
+    {
+      "id": "P1",
+      "title": "Types of AI reasoning",
+      "text": "# Types of AI reasoning\n\nAI systems use several kinds of reasoning. Deductive reasoning starts from a general rule and applies it to a particular case: all birds have wings, a sparrow is a bird, so a sparrow has wings. If the rule and the case are true, the conclusion is guaranteed. Inductive reasoning works the other way. It observes many specific cases and proposes a general rule, so its conclusion is likely but not certain. For example, if many students passed an exam, we may conclude that the exam is manageable.\n\nAbductive reasoning looks at an observation and infers the most plausible explanation for it. If the road is wet, the best explanation is that it probably rained, although a burst pipe is also possible. Analogical reasoning solves a new problem by recalling a similar past situation and adapting its solution. It is the basis of case-based recommendation. These reasoning types are used in medical diagnosis, fraud detection, intelligent tutoring and robotics."
+    },
+    {
+      "id": "P2",
+      "title": "Search and planning algorithms",
+      "text": "# Search and planning algorithms\n\nPlanning algorithms help an AI agent find a good sequence of actions that leads from the current state to a goal. Breadth First Search (BFS) explores a graph level by level. In an unweighted graph it guarantees the shortest path, but it uses a lot of memory because the whole frontier must be stored. Depth First Search (DFS) explores one path deeply before backtracking. It uses a stack and needs little memory, but it does not guarantee the shortest path.\n\nThe A* algorithm evaluates each node with the formula f(n) = g(n) + h(n). Here g(n) is the actual cost from the start to node n, and h(n) is a heuristic estimate of the cost from n to the goal. A* always expands the node with the lowest f(n), which balances the cost already paid against the cost still expected. It is used in navigation systems, autonomous vehicles and robotics. Greedy best-first search uses only h(n), so it is fast but not guaranteed to find the cheapest path."
+    },
+    {
+      "id": "P3",
+      "title": "Prompting methods for reasoning",
+      "text": "# Prompting methods for reasoning\n\nChain-of-Thought (CoT) prompting makes a language model reason step by step before it gives the final answer. Writing out the intermediate steps improves accuracy on problems that need several stages of calculation or logic, and it makes mistakes easier to find. The cost is that CoT is slower and uses more computation, and a chain can still be fluent and wrong.\n\nTree-of-Thought (ToT) explores several reasoning paths instead of one. It evaluates the paths and continues with the most promising ones, so it is slower than CoT but gives higher creativity and better decisions on planning problems. ReAct combines reasoning with acting. The model reasons, takes an action such as calling a search tool, observes the result, reasons again and then answers. Because ReAct uses tools and external knowledge, it is the most suitable of the three for agentic AI."
+    },
+    {
+      "id": "P4",
+      "title": "Photosynthesis",
+      "text": "# Photosynthesis\n\nPhotosynthesis is the process by which green plants, algae and some bacteria convert light energy into chemical energy stored in glucose. In plants it takes place in the chloroplasts, which contain the green pigment chlorophyll. Chlorophyll absorbs mainly red and blue light and reflects green light, which is why leaves look green.\n\nThe process has two stages. The light-dependent reactions occur in the thylakoid membranes, where water is split, oxygen is released as a by-product, and the energy carriers ATP and NADPH are produced. The Calvin cycle takes place in the stroma. It uses ATP and NADPH to fix carbon dioxide into glucose. Cellular respiration is roughly the reverse process: glucose is broken down in the mitochondria to release ATP, consuming oxygen and releasing carbon dioxide and water."
+    }
+  ]
+}

@@ -1,0 +1,1357 @@
+{
+  "labels": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "bundles": [
+    {
+      "model": "qwen2.5:7b",
+      "timestamp": "2026-10-24T13:55:35",
+      "answering": {
+        "model": "qwen2.5:7b",
+        "predictions": [
+          {
+            "id": "Q01",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 0.0,
+              "B": 1.1267970806315868e-11,
+              "C": 0.9999999974814815,
+              "D": 2.5072506109055254e-09
+            },
+            "raw": "C",
+            "latency_s": 1.6984452,
+            "prompt_tokens": 122,
+            "prompt_tps": 80.80272874788886,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q21",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.9999999894099981,
+              "B": 1.2566075480146128e-09,
+              "C": 1.59511042471819e-09,
+              "D": 7.738283940388651e-09
+            },
+            "raw": "A",
+            "latency_s": 0.8471713,
+            "prompt_tokens": 86,
+            "prompt_tps": 131.23559841906885,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q02",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 1.8758821929554162e-09,
+              "B": 4.797417339754593e-10,
+              "C": 7.373106302243605e-11,
+              "D": 0.9999999975706451
+            },
+            "raw": "D",
+            "latency_s": 1.3429559,
+            "prompt_tokens": 128,
+            "prompt_tps": 110.64710402815969,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q22",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 3.1576544218830955e-12,
+              "B": 0.9999999996261963,
+              "C": 5.961577675443381e-12,
+              "D": 3.646843586732717e-10
+            },
+            "raw": "B",
+            "latency_s": 0.867145,
+            "prompt_tokens": 93,
+            "prompt_tps": 136.9608822048051,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q03",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 3.0780885183775275e-09,
+              "B": 0.9023192078671805,
+              "C": 0.09767376660080877,
+              "D": 7.022453922253305e-06
+            },
+            "raw": "B",
+            "latency_s": 1.6306943,
+            "prompt_tokens": 151,
+            "prompt_tps": 104.60526406940802,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q23",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 3.137406497369711e-11,
+              "B": 1.9156436157076764e-10,
+              "C": 6.921941697013484e-11,
+              "D": 0.9999999997078421
+            },
+            "raw": "D",
+            "latency_s": 0.7544731,
+            "prompt_tokens": 83,
+            "prompt_tps": 146.711021709696,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q04",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 0.0,
+              "B": 3.748259516078145e-10,
+              "C": 0.9999999994266855,
+              "D": 1.984884765456068e-10
+            },
+            "raw": "C",
+            "latency_s": 1.3526631,
+            "prompt_tokens": 127,
+            "prompt_tps": 108.88697788908446,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q24",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 6.1316669226054496e-12,
+              "B": 0.999999999577524,
+              "C": 3.2595316819836535e-11,
+              "D": 3.8374909274643425e-10
+            },
+            "raw": "B",
+            "latency_s": 0.7754336,
+            "prompt_tokens": 83,
+            "prompt_tps": 140.34684270331692,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q05",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 2.3755301643386102e-12,
+              "B": 0.9999999998107567,
+              "C": 1.7595361972649923e-11,
+              "D": 1.692724246050101e-10
+            },
+            "raw": "B",
+            "latency_s": 1.0676548,
+            "prompt_tokens": 102,
+            "prompt_tps": 115.6262008971233,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q25",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 2.7611494893366083e-09,
+              "B": 0.9999964940316828,
+              "C": 4.570200784890583e-09,
+              "D": 3.498636966919754e-06
+            },
+            "raw": "B",
+            "latency_s": 0.9615815,
+            "prompt_tokens": 98,
+            "prompt_tps": 125.94960216633315,
+            "category": "closed-book",
+            "difficulty": "hard",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q06",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 5.786143902687227e-12,
+              "B": 4.12329583765838e-11,
+              "C": 0.9999999996094768,
+              "D": 3.4350397445674684e-10
+            },
+            "raw": "C",
+            "latency_s": 1.7737711,
+            "prompt_tokens": 150,
+            "prompt_tps": 94.47854770095903,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q26",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 1.906875344553535e-11,
+              "B": 1.8610896322520954e-08,
+              "C": 1.2853346845422303e-10,
+              "D": 0.9999999812415014
+            },
+            "raw": "D",
+            "latency_s": 0.9144214,
+            "prompt_tokens": 95,
+            "prompt_tps": 130.95049382120433,
+            "category": "closed-book",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q07",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 1.3978832877490575e-11,
+              "B": 6.193331208921997e-11,
+              "C": 1.4312214810588762e-11,
+              "D": 0.9999999999097757
+            },
+            "raw": "D",
+            "latency_s": 1.3071601,
+            "prompt_tokens": 125,
+            "prompt_tps": 111.38655769199924,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q27",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.9999999992542052,
+              "B": 5.667496955181815e-10,
+              "C": 3.135240989297976e-11,
+              "D": 1.4769273033311465e-10
+            },
+            "raw": "A",
+            "latency_s": 0.8783523,
+            "prompt_tokens": 93,
+            "prompt_tps": 135.36763228911033,
+            "category": "closed-book",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q08",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 0.0,
+              "B": 0.9999999998551379,
+              "C": 7.612084792444582e-12,
+              "D": 1.3724999503990078e-10
+            },
+            "raw": "B",
+            "latency_s": 1.4393967,
+            "prompt_tokens": 132,
+            "prompt_tps": 104.87501996200665,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q28",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.9999999997698643,
+              "B": 1.7982287679271167e-10,
+              "C": 2.2019744809883177e-11,
+              "D": 2.8293170931095417e-11
+            },
+            "raw": "A",
+            "latency_s": 0.7733688,
+            "prompt_tokens": 84,
+            "prompt_tps": 143.00501198518194,
+            "category": "closed-book",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q09",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 1.0748897156182506e-11,
+              "B": 1.3283297425485519e-11,
+              "C": 0.9999999998028082,
+              "D": 1.7315973204074829e-10
+            },
+            "raw": "C",
+            "latency_s": 1.3616268,
+            "prompt_tokens": 121,
+            "prompt_tps": 102.91986200232718,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q29",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 3.735298944692027e-10,
+              "B": 4.1294074420786125e-09,
+              "C": 2.7106661344014383e-11,
+              "D": 0.9999999954699559
+            },
+            "raw": "D",
+            "latency_s": 1.3639863,
+            "prompt_tokens": 129,
+            "prompt_tps": 109.79564392166209,
+            "category": "closed-book",
+            "difficulty": "hard",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q10",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 2.3759551999269036e-09,
+              "B": 1.1505399085807407e-09,
+              "C": 1.154544620564253e-10,
+              "D": 0.9999999963580504
+            },
+            "raw": "D",
+            "latency_s": 1.3735481,
+            "prompt_tokens": 130,
+            "prompt_tps": 109.43590002609625,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q30",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 2.2431871561792597e-11,
+              "B": 0.9999999993163471,
+              "C": 1.4698082650739827e-11,
+              "D": 6.465229724924961e-10
+            },
+            "raw": "B",
+            "latency_s": 0.9736109,
+            "prompt_tokens": 98,
+            "prompt_tps": 124.59205636646338,
+            "category": "closed-book",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q11",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 0.001576740477166487,
+              "B": 0.9984074551987,
+              "C": 9.530913950953452e-06,
+              "D": 6.273410182592703e-06
+            },
+            "raw": "B",
+            "latency_s": 1.1223096,
+            "prompt_tokens": 110,
+            "prompt_tps": 117.38128750198749,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q31",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 2.0145804651596057e-11,
+              "B": 8.934435078880703e-11,
+              "C": 4.870389321830363e-11,
+              "D": 0.9999999998418059
+            },
+            "raw": "D",
+            "latency_s": 0.8119337,
+            "prompt_tokens": 85,
+            "prompt_tps": 135.35700010669316,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q12",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 3.295096486007846e-09,
+              "B": 7.73846799711049e-11,
+              "C": 1.9570549268125502e-10,
+              "D": 0.9999999964318134
+            },
+            "raw": "D",
+            "latency_s": 1.2398126,
+            "prompt_tokens": 116,
+            "prompt_tps": 109.79816079542915,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q32",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.999999999241761,
+              "B": 5.2912164611100897e-11,
+              "C": 8.967641535493535e-11,
+              "D": 6.15650551881643e-10
+            },
+            "raw": "A",
+            "latency_s": 0.8746629,
+            "prompt_tokens": 93,
+            "prompt_tps": 135.8598393932178,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q13",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 0.0,
+              "B": 4.2336289583676934e-12,
+              "C": 0.9999999974841218,
+              "D": 2.5116445170766863e-09
+            },
+            "raw": "C",
+            "latency_s": 1.2641675,
+            "prompt_tokens": 121,
+            "prompt_tps": 111.7255503406706,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q33",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 1.0540331208673412e-11,
+              "B": 5.607377108408857e-11,
+              "C": 0.9999999997116065,
+              "D": 2.2177945084109603e-10
+            },
+            "raw": "C",
+            "latency_s": 0.785992,
+            "prompt_tokens": 83,
+            "prompt_tps": 138.45956230096436,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q14",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 1.5542134412586303e-11,
+              "B": 3.837772491527305e-12,
+              "C": 0.9999999998307028,
+              "D": 1.4991729394698826e-10
+            },
+            "raw": "C",
+            "latency_s": 1.238474,
+            "prompt_tokens": 116,
+            "prompt_tps": 109.88292731907445,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q34",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 4.615717192201002e-10,
+              "B": 1.3940532286610401e-09,
+              "C": 0.9999999975264364,
+              "D": 6.179387286943733e-10
+            },
+            "raw": "C",
+            "latency_s": 0.9138893,
+            "prompt_tokens": 96,
+            "prompt_tps": 131.78558485344345,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q15",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 6.506009175737476e-08,
+              "B": 3.1601823488717087e-10,
+              "C": 5.916214420608547e-11,
+              "D": 0.9999999345647278
+            },
+            "raw": "D",
+            "latency_s": 1.348253,
+            "prompt_tokens": 126,
+            "prompt_tps": 108.94894531368219,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q35",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 6.504497289592739e-11,
+              "B": 7.908066061441686e-06,
+              "C": 0.9999920915455405,
+              "D": 3.2335320085929576e-10
+            },
+            "raw": "C",
+            "latency_s": 0.8550085,
+            "prompt_tokens": 95,
+            "prompt_tps": 141.65066262688916,
+            "category": "closed-book",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q16",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.9999999974812583,
+              "B": 1.9062409332475864e-09,
+              "C": 4.0589772623880607e-10,
+              "D": 2.0660292545061475e-10
+            },
+            "raw": "A",
+            "latency_s": 1.2734812,
+            "prompt_tokens": 123,
+            "prompt_tps": 112.65768641412416,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q36",
+            "gold": "C",
+            "pred": "C",
+            "probs": {
+              "A": 1.4328083961140466e-11,
+              "B": 2.394528244655582e-11,
+              "C": 0.999999999811573,
+              "D": 1.5015367029184463e-10
+            },
+            "raw": "C",
+            "latency_s": 0.6750899,
+            "prompt_tokens": 77,
+            "prompt_tps": 156.71588630974793,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q17",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.9999999998758482,
+              "B": 3.110670286676545e-11,
+              "C": 4.214472229670491e-11,
+              "D": 5.0900274389112775e-11
+            },
+            "raw": "A",
+            "latency_s": 1.31365,
+            "prompt_tokens": 118,
+            "prompt_tps": 104.44964332217138,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q37",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.9999999934092292,
+              "B": 9.604142785634355e-10,
+              "C": 4.753164729115567e-09,
+              "D": 8.7719175490422e-10
+            },
+            "raw": "A",
+            "latency_s": 0.7525287,
+            "prompt_tokens": 79,
+            "prompt_tps": 138.34286264655148,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q18",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 5.18379512161931e-13,
+              "B": 0.9999999994161262,
+              "C": 2.93351279117092e-11,
+              "D": 5.54020245382205e-10
+            },
+            "raw": "B",
+            "latency_s": 1.3946951,
+            "prompt_tokens": 119,
+            "prompt_tps": 98.54272696708674,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q38",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 2.1093140737343016e-11,
+              "B": 1.1315703541183599e-10,
+              "C": 3.170891583584158e-11,
+              "D": 0.999999999834041
+            },
+            "raw": "D",
+            "latency_s": 0.7103163,
+            "prompt_tokens": 78,
+            "prompt_tps": 148.32591386828278,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q19",
+            "gold": "B",
+            "pred": "B",
+            "probs": {
+              "A": 0.0,
+              "B": 0.9999999998654361,
+              "C": 4.1300964228394587e-11,
+              "D": 9.326294739724807e-11
+            },
+            "raw": "B",
+            "latency_s": 1.2602141,
+            "prompt_tokens": 118,
+            "prompt_tps": 109.16040844494523,
+            "category": "context",
+            "difficulty": "medium",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q39",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.9999999986211887,
+              "B": 3.047104172115216e-10,
+              "C": 8.311686641355633e-11,
+              "D": 9.909840324911572e-10
+            },
+            "raw": "A",
+            "latency_s": 0.8535406,
+            "prompt_tokens": 89,
+            "prompt_tps": 132.53435469171615,
+            "category": "closed-book",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q20",
+            "gold": "D",
+            "pred": "D",
+            "probs": {
+              "A": 1.11536161214706e-11,
+              "B": 1.7702813823451608e-11,
+              "C": 9.28606826775536e-12,
+              "D": 0.9999999999618574
+            },
+            "raw": "D",
+            "latency_s": 1.3140897,
+            "prompt_tokens": 125,
+            "prompt_tps": 110.33484418513305,
+            "category": "context",
+            "difficulty": "easy",
+            "prob_source": "logprobs"
+          },
+          {
+            "id": "Q40",
+            "gold": "A",
+            "pred": "A",
+            "probs": {
+              "A": 0.8551711428874375,
+              "B": 0.03917214075727697,
+              "C": 0.10565348642251166,
+              "D": 3.229932773844832e-06
+            },
+            "raw": "A",
+            "latency_s": 1.005724,
+            "prompt_tokens": 102,
+            "prompt_tps": 124.62840574610262,
+            "category": "closed-book",
+            "difficulty": "hard",
+            "prob_source": "logprobs"
+          }
+        ],
+        "speed": {
+          "eval_count": 128,
+          "eval_seconds": 22.147272,
+          "tokens_per_second": 5.7794928422787235
+        },
+        "timestamp": "2026-10-24T13:46:39",
+        "simulated": false
+      },
+      "generation": {
+        "model": "qwen2.5:7b",
+        "judge": "qwen2.5:3b",
+        "count_per_passage": 3,
+        "num_options": 4,
+        "timestamp": "2026-10-24T13:55:35",
+        "passages": [
+          {
+            "id": "P1",
+            "title": "Types of AI reasoning",
+            "requested": 3,
+            "accepted": 3,
+            "rejected": [],
+            "warnings": [],
+            "seconds": 113.60900000005495,
+            "usage": {
+              "calls": 1,
+              "prompt_tokens": 639,
+              "prompt_seconds": 8.358597,
+              "gen_tokens": 530,
+              "gen_seconds": 97.008158
+            },
+            "error": "",
+            "questions": [
+              {
+                "id": "30c720978cf4",
+                "question": "Which type of AI reasoning involves drawing a general conclusion from multiple specific observations?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "Deductive"
+                  },
+                  {
+                    "id": "B",
+                    "text": "Inductive"
+                  },
+                  {
+                    "id": "C",
+                    "text": "Abductive"
+                  },
+                  {
+                    "id": "D",
+                    "text": "Analogical"
+                  }
+                ],
+                "correct_answer": "B",
+                "explanation": "The material states that inductive reasoning observes many specific cases and proposes a general rule.",
+                "difficulty": "Medium",
+                "topic": "Types of AI reasoning",
+                "source_excerpt": "If the road is wet, the best explanation is that it probably rained, although a burst pipe is also possible.",
+                "source_section": "Types of AI reasoning",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              },
+              {
+                "id": "a99db31b8c3c",
+                "question": "What does abductive reasoning do when faced with an observation?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "Applies a general rule to a specific case"
+                  },
+                  {
+                    "id": "B",
+                    "text": "Draws a likely conclusion from many specific cases"
+                  },
+                  {
+                    "id": "C",
+                    "text": "Infers the most plausible explanation for an observation"
+                  },
+                  {
+                    "id": "D",
+                    "text": "Solves new problems by adapting past solutions"
+                  }
+                ],
+                "correct_answer": "C",
+                "explanation": "The material defines abductive reasoning as looking at an observation and inferring the most plausible explanation.",
+                "difficulty": "Medium",
+                "topic": "Types of AI reasoning",
+                "source_excerpt": "If the road is wet, the best explanation is that it probably rained, although a burst pipe is also possible.",
+                "source_section": "Types of AI reasoning",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              },
+              {
+                "id": "07675f5fed4a",
+                "question": "Which type of reasoning is used in case-based recommendation?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "Deductive"
+                  },
+                  {
+                    "id": "B",
+                    "text": "Inductive"
+                  },
+                  {
+                    "id": "C",
+                    "text": "Abductive"
+                  },
+                  {
+                    "id": "D",
+                    "text": "Analogical"
+                  }
+                ],
+                "correct_answer": "D",
+                "explanation": "The material states that analogical reasoning is the basis of case-based recommendation.",
+                "difficulty": "Medium",
+                "topic": "Types of AI reasoning",
+                "source_excerpt": "Analogical reasoning solves a new problem by recalling a similar past situation and adapting its solution.",
+                "source_section": "Types of AI reasoning",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              }
+            ]
+          },
+          {
+            "id": "P2",
+            "title": "Search and planning algorithms",
+            "requested": 3,
+            "accepted": 3,
+            "rejected": [],
+            "warnings": [],
+            "seconds": 126.57900000002701,
+            "usage": {
+              "calls": 1,
+              "prompt_tokens": 657,
+              "prompt_seconds": 8.932649,
+              "gen_tokens": 628,
+              "gen_seconds": 113.457938
+            },
+            "error": "",
+            "questions": [
+              {
+                "id": "ec1b68f85c6d",
+                "question": "Which algorithm guarantees finding the shortest path in an unweighted graph?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "Breadth First Search (BFS)"
+                  },
+                  {
+                    "id": "B",
+                    "text": "Depth First Search (DFS)"
+                  },
+                  {
+                    "id": "C",
+                    "text": "Greedy best-first search"
+                  },
+                  {
+                    "id": "D",
+                    "text": "A* algorithm"
+                  }
+                ],
+                "correct_answer": "A",
+                "explanation": "BFS guarantees the shortest path in an unweighted graph by exploring all nodes level by level.",
+                "difficulty": "Medium",
+                "topic": "Search algorithms",
+                "source_excerpt": "Breadth First Search (BFS) explores a graph level by level. In an unweighted graph it guarantees the shortest path, but it uses a lot of memory because the whole frontier must be stored.",
+                "source_section": "Search and planning algorithms",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              },
+              {
+                "id": "a8a8c77301d3",
+                "question": "What is a key characteristic of the A* algorithm that makes it different from Greedy best-first search?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "It only considers the heuristic cost"
+                  },
+                  {
+                    "id": "B",
+                    "text": "It uses both the actual and estimated costs"
+                  },
+                  {
+                    "id": "C",
+                    "text": "It explores nodes level by level"
+                  },
+                  {
+                    "id": "D",
+                    "text": "It requires no memory to store the frontier"
+                  }
+                ],
+                "correct_answer": "B",
+                "explanation": "A* algorithm evaluates each node with f(n) = g(n) + h(n), using both the actual cost and the heuristic estimate.",
+                "difficulty": "Medium",
+                "topic": "Search algorithms",
+                "source_excerpt": "The A* algorithm evaluates each node with the formula f(n) = g(n) + h(n). Here g(n) is the actual cost from the start to node n, and h(n) is a heuristic estimate of the cost from n to the goal.",
+                "source_section": "Search and planning algorithms",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              },
+              {
+                "id": "0022535f8bd7",
+                "question": "In which scenario might Greedy best-first search be preferred over A*?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "When memory usage is not a concern"
+                  },
+                  {
+                    "id": "B",
+                    "text": "When finding the shortest path is critical"
+                  },
+                  {
+                    "id": "C",
+                    "text": "When heuristic estimates are unreliable"
+                  },
+                  {
+                    "id": "D",
+                    "text": "When speed and less optimal paths are acceptable"
+                  }
+                ],
+                "correct_answer": "D",
+                "explanation": "Greedy best-first search uses only h(n), making it faster but potentially leading to suboptimal solutions.",
+                "difficulty": "Medium",
+                "topic": "Search algorithms",
+                "source_excerpt": "Greedy best-first search uses only h(n), so it is fast but not guaranteed to find the cheapest path.",
+                "source_section": "Search and planning algorithms",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              }
+            ]
+          },
+          {
+            "id": "P3",
+            "title": "Prompting methods for reasoning",
+            "requested": 3,
+            "accepted": 3,
+            "rejected": [],
+            "warnings": [],
+            "seconds": 116.45299999997951,
+            "usage": {
+              "calls": 1,
+              "prompt_tokens": 625,
+              "prompt_seconds": 8.364016,
+              "gen_tokens": 563,
+              "gen_seconds": 104.184348
+            },
+            "error": "",
+            "questions": [
+              {
+                "id": "07653f0b236a",
+                "question": "Which prompting method explores multiple reasoning paths instead of one?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "Chain-of-Thought"
+                  },
+                  {
+                    "id": "B",
+                    "text": "Tree-of-Thought"
+                  },
+                  {
+                    "id": "C",
+                    "text": "ReAct"
+                  },
+                  {
+                    "id": "D",
+                    "text": "None of the above"
+                  }
+                ],
+                "correct_answer": "B",
+                "explanation": "Tree-of-Thought (ToT) explores several reasoning paths instead of one.",
+                "difficulty": "Medium",
+                "topic": "Prompting methods for reasoning",
+                "source_excerpt": "Tree-of-Thought (ToT) explores several reasoning paths instead of one.",
+                "source_section": "Prompting methods for reasoning",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              },
+              {
+                "id": "911e9b31de13",
+                "question": "What is a potential disadvantage of using Chain-of-Thought (CoT) prompting?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "It requires less computation"
+                  },
+                  {
+                    "id": "B",
+                    "text": "It can be slower and use more computation"
+                  },
+                  {
+                    "id": "C",
+                    "text": "It is the most suitable for agentic AI"
+                  },
+                  {
+                    "id": "D",
+                    "text": "It does not improve accuracy on complex problems"
+                  }
+                ],
+                "correct_answer": "B",
+                "explanation": "The cost of Chain-of-Thought (CoT) is that it is slower and uses more computation.",
+                "difficulty": "Medium",
+                "topic": "Prompting methods for reasoning",
+                "source_excerpt": "The cost is that CoT is slower and uses more computation, and a chain can still be fluent and wrong.",
+                "source_section": "Prompting methods for reasoning",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              },
+              {
+                "id": "d34d1e4ed67d",
+                "question": "How does ReAct prompting differ from Chain-of-Thought (CoT) and Tree-of-Thought (ToT)?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "It uses tools and external knowledge"
+                  },
+                  {
+                    "id": "B",
+                    "text": "It explores multiple reasoning paths"
+                  },
+                  {
+                    "id": "C",
+                    "text": "It is the slowest method"
+                  },
+                  {
+                    "id": "D",
+                    "text": "It does not involve acting"
+                  }
+                ],
+                "correct_answer": "A",
+                "explanation": "ReAct combines reasoning with acting, using tools and external knowledge.",
+                "difficulty": "Medium",
+                "topic": "Prompting methods for reasoning",
+                "source_excerpt": "ReAct combines reasoning with acting. The model reasons, takes an action such as calling a search tool, observes the result, reasons again and then answers.",
+                "source_section": "Prompting methods for reasoning",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              }
+            ]
+          },
+          {
+            "id": "P4",
+            "title": "Photosynthesis",
+            "requested": 3,
+            "accepted": 3,
+            "rejected": [],
+            "warnings": [],
+            "seconds": 110.54700000002049,
+            "usage": {
+              "calls": 1,
+              "prompt_tokens": 607,
+              "prompt_seconds": 8.330343,
+              "gen_tokens": 548,
+              "gen_seconds": 98.349686
+            },
+            "error": "",
+            "questions": [
+              {
+                "id": "a7e81d3a3a88",
+                "question": "Where does the light-dependent reaction of photosynthesis take place?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "In the cytoplasm"
+                  },
+                  {
+                    "id": "B",
+                    "text": "On the thylakoid membranes"
+                  },
+                  {
+                    "id": "C",
+                    "text": "In the nucleus"
+                  },
+                  {
+                    "id": "D",
+                    "text": "In the mitochondria"
+                  }
+                ],
+                "correct_answer": "B",
+                "explanation": "The light-dependent reactions occur in the thylakoid membranes.",
+                "difficulty": "Medium",
+                "topic": "Photosynthesis Stages",
+                "source_excerpt": "The light-dependent reactions occur in the thylakoid membranes, where water is split, oxygen is released as a by-product, and the energy carriers ATP and NADPH are produced.",
+                "source_section": "Photosynthesis",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              },
+              {
+                "id": "8a0e490fa177",
+                "question": "Which of the following gases is NOT directly involved in the photosynthesis process described?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "Oxygen"
+                  },
+                  {
+                    "id": "B",
+                    "text": "Carbon dioxide"
+                  },
+                  {
+                    "id": "C",
+                    "text": "Water"
+                  },
+                  {
+                    "id": "D",
+                    "text": "Nitrogen"
+                  }
+                ],
+                "correct_answer": "D",
+                "explanation": "Photosynthesis involves the conversion of carbon dioxide and water into glucose, with oxygen as a by-product. Nitrogen is not involved in this process.",
+                "difficulty": "Medium",
+                "topic": "Photosynthesis Substances",
+                "source_excerpt": "In plants it takes place in the chloroplasts, which contain the green pigment chlorophyll.",
+                "source_section": "Photosynthesis",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              },
+              {
+                "id": "6e2bfd8a5454",
+                "question": "What is a by-product of the light-dependent reactions during photosynthesis?",
+                "options": [
+                  {
+                    "id": "A",
+                    "text": "Glucose"
+                  },
+                  {
+                    "id": "B",
+                    "text": "Oxygen"
+                  },
+                  {
+                    "id": "C",
+                    "text": "ATP"
+                  },
+                  {
+                    "id": "D",
+                    "text": "NADPH"
+                  }
+                ],
+                "correct_answer": "B",
+                "explanation": "During the light-dependent reactions, oxygen is released as a by-product.",
+                "difficulty": "Medium",
+                "topic": "Photosynthesis By-products",
+                "source_excerpt": "The light-dependent reactions occur in the thylakoid membranes, where water is split, oxygen is released as a by-product, and the energy carriers ATP and NADPH are produced.",
+                "source_section": "Photosynthesis",
+                "key_check": "unchecked",
+                "self_check": "agrees",
+                "judge_check": "agrees"
+              }
+            ]
+          }
+        ]
+      },
+      "answering_metrics": [
+        {
+          "name": "Accuracy",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "correct predictions / total predictions"
+        },
+        {
+          "name": "Exact Match (EM)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "predictions identical to the expected answer string / total"
+        },
+        {
+          "name": "Precision (macro)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "TP / (TP + FP), computed per option letter then averaged"
+        },
+        {
+          "name": "Recall (macro)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "TP / (TP + FN), computed per option letter then averaged"
+        },
+        {
+          "name": "F1-score (per class)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "2 * P * R / (P + R)"
+        },
+        {
+          "name": "Macro-F1",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "mean of per-class F1 (every class counts equally)"
+        },
+        {
+          "name": "Micro-F1",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "F1 from globally pooled TP, FP, FN"
+        },
+        {
+          "name": "Weighted-F1",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "mean of per-class F1 weighted by support"
+        },
+        {
+          "name": "Top-k accuracy",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "fraction of questions whose correct option is among the k most probable"
+        },
+        {
+          "name": "Matthews Correlation Coefficient (MCC)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "(c*s - sum(p_k*t_k)) / sqrt((s^2 - sum p_k^2) * (s^2 - sum t_k^2))"
+        },
+        {
+          "name": "Cohen's kappa",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "(p_o - p_e) / (1 - p_e)"
+        },
+        {
+          "name": "Log loss (cross-entropy)",
+          "value": 0.006521148952322732,
+          "better": "lower",
+          "formula": "-(1/N) * sum( ln p(correct option) )"
+        },
+        {
+          "name": "Brier score",
+          "value": 0.0013189809534999018,
+          "better": "lower",
+          "formula": "(1/N) * sum over questions of sum over options (p_option - y_option)^2"
+        },
+        {
+          "name": "Expected Calibration Error (ECE)",
+          "value": 0.006102843559041818,
+          "better": "lower",
+          "formula": "sum over bins of (n_bin / N) * |accuracy_bin - confidence_bin|"
+        }
+      ],
+      "generation_metrics": [
+        {
+          "name": "Delivery rate",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "accepted questions / questions requested"
+        },
+        {
+          "name": "Acceptance rate",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "accepted / (accepted + rejected candidate questions)"
+        },
+        {
+          "name": "Valid-JSON rate",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "replies that parsed as the required JSON / total replies"
+        },
+        {
+          "name": "Model calls per accepted question",
+          "value": 0.3333333333333333,
+          "better": "lower",
+          "formula": "total model replies / accepted questions"
+        },
+        {
+          "name": "Ungrounded-candidate rate",
+          "value": 0.0,
+          "better": "lower",
+          "formula": "candidates whose quoted source sentence was not found in the text / candidates"
+        },
+        {
+          "name": "Duplicate-candidate rate",
+          "value": 0.0,
+          "better": "lower",
+          "formula": "duplicate candidates / candidates"
+        },
+        {
+          "name": "Format-defect rate",
+          "value": 0.0,
+          "better": "lower",
+          "formula": "candidates with a broken structure (wrong option count, invalid answer, options inside the question...) / candidates"
+        },
+        {
+          "name": "Seconds per accepted question",
+          "value": 38.93233333334016,
+          "better": "lower",
+          "formula": "total generation time / accepted questions"
+        },
+        {
+          "name": "Generation speed (tokens/s)",
+          "value": 5.4939450019059315,
+          "better": "higher",
+          "formula": "eval_count / (eval_duration / 1e9)"
+        },
+        {
+          "name": "Blind-answer agreement (same model)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "questions where the checker's blind answer equals the stored key / questions checked"
+        },
+        {
+          "name": "Blind-answer agreement (judge model)",
+          "value": 1.0,
+          "better": "higher",
+          "formula": "questions where the checker's blind answer equals the stored key / questions checked"
+        }
+      ]
+    }
+  ]
+}

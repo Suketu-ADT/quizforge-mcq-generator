@@ -14,6 +14,10 @@ import requests
 KEEP_ALIVE = "30m"  # keep the model in memory between requests so later calls start fast
 
 
+def new_usage() -> dict:
+    return {"calls": 0, "prompt_tokens": 0, "prompt_seconds": 0.0, "gen_tokens": 0, "gen_seconds": 0.0}
+
+
 class OllamaError(Exception):
     """Base class for every Ollama-related failure (message is user-friendly)."""
 
@@ -68,6 +72,24 @@ class OllamaClient:
         self.temperature = temperature
         self.timeout_s = timeout_s
         self._http = session or requests.Session()
+        self.usage = new_usage()  # running totals taken from Ollama's own timing fields (see reset_usage)
+        self.last_stats: dict = {}  # raw counters of the most recent reply (used by the evaluation telemetry)
+
+    def reset_usage(self) -> dict:
+        """Return the totals so far and start counting again (used by the evaluation tool)."""
+        done, self.usage = self.usage, new_usage()
+        return done
+
+    def _note_usage(self, data: dict) -> None:
+        """Add one reply's token counts / durations (Ollama reports durations in nanoseconds)."""
+        u = self.usage
+        u["calls"] += 1
+        u["prompt_tokens"] += int(data.get("prompt_eval_count") or 0)
+        u["prompt_seconds"] += (data.get("prompt_eval_duration") or 0) / 1e9
+        u["gen_tokens"] += int(data.get("eval_count") or 0)
+        u["gen_seconds"] += (data.get("eval_duration") or 0) / 1e9
+        self.last_stats = {k: data.get(k) for k in ("prompt_eval_count", "eval_count", "load_duration", "prompt_eval_duration",
+                                                    "eval_duration", "total_duration")}
 
     # ------------------------------------------------------------------ status
     def list_models(self) -> list[str]:
@@ -106,6 +128,64 @@ class OllamaClient:
         if not st.model_installed:
             st.error = self._missing_msg()
         return st
+
+    def chat_with_logprobs(
+        self,
+        messages: list[dict],
+        top_logprobs: int = 20,
+        num_predict: int = 4,
+        on_progress: Callable[[int], None] | None = None,
+    ) -> tuple[str, list[dict]]:
+        """Deterministic (temperature 0) streamed reply plus the token log-probabilities Ollama returns.
+
+        Used by the evaluation engine to score multiple-choice answers with a real probability per option.
+        """
+        payload = {
+            "model": self.model, "messages": messages, "stream": True, "keep_alive": KEEP_ALIVE,
+            "logprobs": True, "top_logprobs": top_logprobs, "options": {"temperature": 0, "num_predict": num_predict},
+        }
+        try:
+            resp = self._http.post(f"{self.base_url}/api/chat", json=payload, timeout=self.timeout_s, stream=True)
+        except requests.ConnectionError as exc:
+            raise OllamaUnavailableError(self._unavailable_msg()) from exc
+        except requests.Timeout as exc:
+            raise OllamaTimeoutError(f"The model did not respond within {self.timeout_s} s.") from exc
+        except requests.RequestException as exc:
+            raise OllamaError(f"Request to Ollama failed: {exc}") from exc
+        if resp.status_code == 404:
+            raise ModelNotFoundError(self._missing_msg())
+        if resp.status_code >= 400:
+            raise OllamaError(f"Ollama returned HTTP {resp.status_code}: {_error_text(resp)}")
+        parts: list[str] = []
+        logprobs: list[dict] = []
+        try:
+            for line in resp.iter_lines():
+                if not line:
+                    continue
+                try:
+                    chunk = json.loads(line)
+                except ValueError as exc:
+                    raise OllamaError("Ollama returned a malformed streaming response.") from exc
+                if chunk.get("error"):
+                    raise OllamaError(f"Ollama error: {str(chunk['error'])[:300]}")
+                logprobs.extend(chunk.get("logprobs") or [])
+                piece = (chunk.get("message") or {}).get("content", "")
+                if piece:
+                    parts.append(piece)
+                    if on_progress:
+                        on_progress(len(parts))
+                if chunk.get("done"):
+                    self._note_usage(chunk)
+                    break
+        except requests.Timeout as exc:
+            raise OllamaTimeoutError(f"The model stopped responding for {self.timeout_s} s.") from exc
+        except requests.ConnectionError as exc:
+            raise OllamaUnavailableError(self._unavailable_msg()) from exc
+        finally:
+            close = getattr(resp, "close", None)
+            if close:
+                close()
+        return "".join(parts), logprobs
 
     def warm_up(self) -> bool:
         """Ask Ollama to load the model into memory now (no output is generated). Never raises."""
@@ -184,9 +264,11 @@ class OllamaClient:
             return self._read_stream(resp, on_progress)
         try:
             data = resp.json()
-            return data["message"]["content"]
+            content = data["message"]["content"]
         except (ValueError, KeyError, TypeError) as exc:
             raise OllamaError("Ollama returned a response in an unexpected format.") from exc
+        self._note_usage(data)
+        return content
 
     def _read_stream(self, resp, on_progress: Callable[[int], None]) -> str:
         parts: list[str] = []
@@ -207,6 +289,7 @@ class OllamaClient:
                     count += 1
                     on_progress(count)
                 if chunk.get("done"):
+                    self._note_usage(chunk)  # the final chunk carries the token counts and durations
                     break
         except requests.Timeout as exc:
             raise OllamaTimeoutError(

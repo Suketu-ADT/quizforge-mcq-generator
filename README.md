@@ -195,6 +195,14 @@ Quiz accuracy (`correct / total x 100`) measures the *student*, not the model.
 Accuracy, Exact Match, Precision, Recall, F1 (macro / micro / weighted), Top-k, MCC, Cohen's kappa, log loss, Brier score and ECE **with every calculation shown**.
 See [`evaluation/README.md`](evaluation/README.md) for how each metric is computed and how to explain it.
 
+### The 12 performance metrics
+Double-click `run_evaluation.bat`: it runs all tests on both models (each judged by the other) and writes
+`evaluation/results/comparison_<time>.md` plus a report per model. Besides the two tests above it measures Answer Accuracy, F1,
+Answer Relevance, Faithfulness, Hallucination Rate, Instruction-Following, Safety Attack Success Rate, Task Success Rate,
+TTFT p95, End-to-End Latency p95, Cost per Successful Task and Error Rate - each with its formula, the worked calculation,
+sample count and an explicit status when it cannot be computed (`n/a`, never a made-up number).
+Full reference: [`docs/EVALUATION.md`](docs/EVALUATION.md).
+
 ## Project structure
 ```
 quizforge-mcq-generator/

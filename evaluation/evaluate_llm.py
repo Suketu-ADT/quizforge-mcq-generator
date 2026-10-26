@@ -1,25 +1,43 @@
 #!/usr/bin/env python
-"""Evaluate the local LLM (Ollama) on a labelled multiple-choice test set - and SHOW every calculation.
+r"""Evaluate the local LLM (Ollama) the way this project uses it - and SHOW every calculation.
 
-The model answers each question (A/B/C/D). Because the correct answer is known, we can measure:
+THREE TESTS (--suite all runs all three):
 
-    Accuracy, Exact Match, Precision, Recall, F1, Macro-F1, Micro-F1, Weighted-F1,
-    Top-k accuracy, MCC, Cohen's kappa, Log loss, Brier score, Expected Calibration Error
+  1. generation  (the project's real use case)
+     The project's own question generator is asked to write MCQs from source passages. We measure delivery rate,
+     acceptance rate, valid-JSON rate, rejections (ungrounded / duplicate / bad format), seconds per question,
+     tokens/s, and answer-key quality (each key is re-answered blind by the same model and by a second "judge"
+     model). A labels_*.csv is saved so a human can mark each key yes/no; --score-labels then gives the real key
+     accuracy and how well the checks catch wrong keys.
 
-plus speed (latency, prompt tokens/s, generation tokens/s).
+  2. answering   (a labelled benchmark)
+     The model answers 40 questions whose correct option is known. This gives Accuracy, Exact Match, Precision,
+     Recall, F1 (macro / micro / weighted), Top-k, MCC, Cohen's kappa, log loss, Brier score and ECE, computed from
+     Ollama's token log-probabilities.
 
-Probabilities come from Ollama's token log-probabilities: for the first generated token we read the
-probability of each option letter and renormalise over the letters. That gives a real probability
-distribution for every question, which log loss, Brier, ECE and top-k need.
+  3. metrics     (the 12 performance metrics)
+     The evaluation engine runs the labelled questions, the passages and an 11-case safety suite through the model and
+     records every request. Reports Answer Accuracy, F1, Answer Relevance, Faithfulness, Hallucination Rate,
+     Instruction-Following, Safety Attack Success Rate, Task Success Rate, TTFT p95, End-to-End Latency p95,
+     Cost per Successful Task and Error Rate - each with its status and sample count ("n/a" instead of a made-up 0).
+     The judge (relevance / faithfulness / hallucination) is the other model when two are given.
 
-Usage (from the project folder):
-    python evaluation/evaluate_llm.py                          # default model from .env
-    python evaluation/evaluate_llm.py --models qwen2.5:3b qwen2.5:7b
-    python evaluation/evaluate_llm.py --limit 10               # quick run
-    python evaluation/evaluate_llm.py --predictions evaluation/results/<file>.json   # recompute offline
-    python evaluation/evaluate_llm.py --demo                   # SIMULATED model, no Ollama needed
+HOW TO RUN (Windows) - the file must be started from the project folder, or with its full path:
+    cd "C:\Users\Arpit singh\OneDrive\Desktop\GEN AI\mcq-quiz-generator"
+    .venv\Scripts\python.exe evaluation\evaluate_llm.py --models qwen2.5:3b qwen2.5:7b
+or simply double-click  run_evaluation.bat  in the project folder.
 
-Only the Python standard library and `requests` are used (no scikit-learn needed).
+OTHER EXAMPLES
+    ... --suite generation --models qwen2.5:3b --max-passages 1     # quick check of the use-case test
+    ... --suite answering --limit 10                                # quick check of the benchmark
+    ... --suite metrics --metrics-limit 3                           # quick check of the 12 metrics (3 items per dataset)
+    ... --score-labels evaluation\results\qwen2.5_3b\labels_<time>.csv   # after a human filled in yes/no
+    ... --predictions evaluation\results\qwen2.5_3b\report_<time>.json   # recompute offline from a saved report
+    ... --demo                                                      # SIMULATED model, shows the maths without Ollama
+
+Reports are saved to  evaluation\results\<model name>\report_<time>.md / .json  (plus labels_<time>.csv),
+and evaluation\results\comparison_<time>.md when two or more models are given.
+Only the project's own packages are used (no scikit-learn needed).
 """
 from __future__ import annotations
 
@@ -37,11 +55,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 PROJECT = ROOT.parent
+if str(PROJECT) not in sys.path:  # lets "python evaluation/evaluate_llm.py" import the project's own modules
+    sys.path.insert(0, str(PROJECT))
+
+from evaluation.common import (  # noqa: E402  (after the sys.path line above)
+    Metric, f, markdown_calculations, markdown_table, print_calculations, print_summary, val, wilson_interval,
+)
+from services.evaluation.evaluators import parse_letter, probs_from_logprobs  # noqa: E402,F401  (shared with the app's engine)
+from services.evaluation.stats import UNPARSED, confusion, per_class_counts, prf  # noqa: E402,F401
 DEFAULT_DATASET = ROOT / "dataset.json"
 RESULTS_DIR = ROOT / "results"
 EPS = 1e-15  # probabilities are clipped to [EPS, 1] before taking logs
 N_BINS = 10  # equal-width confidence bins for ECE
-NONE_LABEL = "?"  # "the answer could not be parsed" - counted as a wrong prediction
+NONE_LABEL = UNPARSED  # "the answer could not be parsed" - counted as a wrong prediction
 
 try:  # optional: pick up OLLAMA_* settings from the project's .env
     from dotenv import load_dotenv
@@ -93,16 +119,6 @@ class Prediction:
         return max(self.probs.values())
 
 
-@dataclass
-class Metric:
-    name: str
-    value: float
-    better: str  # "higher" / "lower"
-    formula: str
-    working: list[str] = field(default_factory=list)  # the calculation, with the real numbers substituted
-    note: str = ""
-
-
 # =============================================================================================
 # Dataset
 # =============================================================================================
@@ -137,37 +153,6 @@ def build_prompt(item: Item) -> str:
 # =============================================================================================
 # Talking to Ollama
 # =============================================================================================
-def probs_from_logprobs(logprobs: list[dict], letters: list[str]) -> tuple[str | None, dict[str, float]] | None:
-    """Find the first generated token that is an option letter and turn its top-logprobs into probabilities.
-
-    Returns (letter chosen, {letter: probability}) or None if no generated token is an option letter.
-    For every letter we take the largest probability among tokens such as "B", " B", "b" and then
-    renormalise over the option letters only (so the numbers form a proper distribution).
-    """
-    for entry in logprobs or []:
-        token = (entry.get("token") or "").strip().upper()
-        if token not in letters:
-            continue
-        mass = {letter: 0.0 for letter in letters}
-        for cand in entry.get("top_logprobs") or [entry]:
-            letter = (cand.get("token") or "").strip().upper()
-            if letter in mass:
-                mass[letter] = max(mass[letter], math.exp(cand["logprob"]))
-        total = sum(mass.values())
-        if total <= 0:
-            return None
-        return token, {letter: m / total for letter, m in mass.items()}
-    return None
-
-
-def parse_letter(text: str, letters: list[str]) -> str | None:
-    """Accept 'B', 'b.', '(B)', 'Answer: B' - anything that is clearly a single option letter."""
-    match = re.match(r"^\W*(?:answer\W*)?([A-Za-z])\b", text.strip(), flags=re.IGNORECASE)
-    if match and match.group(1).upper() in letters:
-        return match.group(1).upper()
-    return None
-
-
 def uniform(letters: list[str]) -> dict[str, float]:
     return {letter: 1.0 / len(letters) for letter in letters}
 
@@ -268,47 +253,6 @@ def simulate_model(items: list[Item], accuracy: float = 0.8, seed: int = 11) -> 
 # =============================================================================================
 # Metrics - each returns the value AND the working
 # =============================================================================================
-def f(x: float, d: int = 4) -> str:
-    return f"{x:.{d}f}"
-
-
-def confusion(golds: list[str], preds: list[str | None], labels: list[str]) -> dict[str, dict[str, int]]:
-    """matrix[true][predicted]; the extra column '?' collects unparsed answers."""
-    cols = labels + [NONE_LABEL]
-    m = {t: {p: 0 for p in cols} for t in labels}
-    for g, p in zip(golds, preds):
-        m[g][p if p in labels else NONE_LABEL] += 1
-    return m
-
-
-def per_class_counts(m: dict, labels: list[str]) -> dict[str, dict[str, int]]:
-    n = sum(sum(row.values()) for row in m.values())
-    out = {}
-    for k in labels:
-        tp = m[k][k]
-        fp = sum(m[t][k] for t in labels if t != k)  # predicted k, truly something else
-        fn = sum(m[k][p] for p in m[k] if p != k)  # truly k, predicted something else (incl. '?')
-        out[k] = {"tp": tp, "fp": fp, "fn": fn, "tn": n - tp - fp - fn, "support": tp + fn}
-    return out
-
-
-def prf(tp: int, fp: int, fn: int) -> tuple[float, float, float]:
-    p = tp / (tp + fp) if tp + fp else 0.0
-    r = tp / (tp + fn) if tp + fn else 0.0
-    f1 = 2 * p * r / (p + r) if p + r else 0.0
-    return p, r, f1
-
-
-def wilson_interval(correct: int, n: int, z: float = 1.96) -> tuple[float, float]:
-    if n == 0:
-        return 0.0, 0.0
-    p = correct / n
-    denom = 1 + z * z / n
-    centre = (p + z * z / (2 * n)) / denom
-    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
-    return max(0.0, centre - half), min(1.0, centre + half)
-
-
 def normalise_text(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", s.lower())
 
@@ -565,99 +509,313 @@ def comparison_table(runs: list[dict], all_metrics: list[list[Metric]]) -> list[
     width = max(14, *(len(n) + 2 for n in names))
     lines = [f"{'Metric':<42}" + "".join(f"{n:>{width}}" for n in names) + "   Better"]
     for i, m in enumerate(all_metrics[0]):
-        row = f"{m.name:<42}" + "".join(f"{ms[i].value:>{width}.4f}" for ms in all_metrics) + f"   {m.better}"
+        row = f"{m.name:<42}" + "".join(f"{val(ms[i].value):>{width}}" for ms in all_metrics) + f"   {m.better}"
         lines.append(row)
     return lines
-
-
-def markdown_report(runs: list[dict], labels: list[str], all_metrics: list[list[Metric]]) -> str:
-    out = ["# LLM performance report", "", f"Generated {datetime.now().isoformat(timespec='seconds')}  ", f"Options per question: {len(labels)}  "]
-    if any(r.get("simulated") for r in runs):
-        out += ["", "> **SIMULATED RESULTS** - produced by a fake model to demonstrate the calculations; not a real LLM measurement."]
-    for run, metrics in zip(runs, all_metrics):
-        preds = [Prediction(**p) for p in run["predictions"]]
-        out += ["", f"## {run['model']}", "", f"Questions: {len(preds)}", "", "| Metric | Value | Better |", "|---|---:|---|"]
-        out += [f"| {m.name} | {m.value:.4f} | {m.better} |" for m in metrics]
-        out += ["", "**Confusion matrix** (rows = correct option, columns = chosen option)", "", "```"] + confusion_text(preds, labels) + ["```", "", "**Speed**", ""]
-        out += [f"- {line}" for line in (speed_summary(run) or ["no timing data"])]
-        out += ["", "<details><summary>Step-by-step calculations</summary>", ""]
-        for m in metrics:
-            out += [f"### {m.name}", f"*Formula:* `{m.formula}`  ", "", "```"] + m.working + [f"= {m.value:.4f}", "```"]
-            if m.note:
-                out += [f"*{m.note}*"]
-            out += [""]
-        out += ["</details>"]
-    if len(runs) > 1:
-        out += ["", "## Comparison", "", "```"] + comparison_table(runs, all_metrics) + ["```"]
-    return "\n".join(out) + "\n"
 
 
 def slug(text: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "_", text).strip("_")[:40]
 
 
-def save_results(runs: list[dict], labels: list[str], all_metrics: list[list[Metric]]) -> tuple[Path, Path]:
-    RESULTS_DIR.mkdir(exist_ok=True)
-    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    name = "_vs_".join(slug(r["model"]) for r in runs)
-    base = RESULTS_DIR / f"{'demo_' if any(r.get('simulated') for r in runs) else ''}{name}_{stamp}"
-    payload = {"labels": labels, "runs": [
-        {**run, "metrics": [{"name": m.name, "value": m.value, "better": m.better, "formula": m.formula} for m in ms]}
-        for run, ms in zip(runs, all_metrics)]}
-    json_path = Path(f"{base}.json")  # not with_suffix(): model tags contain dots ("qwen2.5") and would be cut off
-    json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    md_path = Path(f"{base}.md")
-    md_path.write_text(markdown_report(runs, labels, all_metrics), encoding="utf-8")
-    return json_path, md_path
+def answering_markdown(run: dict, labels: list[str], metrics: list[Metric]) -> list[str]:
+    preds = [Prediction(**p) for p in run["predictions"]]
+    out = [f"## Question-answering benchmark ({len(preds)} labelled questions)", "",
+           "The model answers questions whose correct option is known. This checks that it can read and reason, "
+           "which the answer-key checker also relies on.", ""]
+    if run.get("simulated"):
+        out += ["> **SIMULATED RESULTS** - a fake model used to demonstrate the calculations; not a real measurement.", ""]
+    out += markdown_table(metrics)
+    out += ["", "**Confusion matrix** (rows = correct option, columns = chosen option, `?` = unreadable reply)", "", "```"]
+    out += confusion_text(preds, labels) + ["```", "", "**Accuracy by subset**", ""]
+    for key in ("category", "difficulty"):
+        out += [f"- {key} `{name}`: {c}/{n} = {c / n:.3f}" for name, c, n in metrics_by_subset(preds, key)]
+    out += ["", "**Speed**", ""] + [f"- {line}" for line in (speed_summary(run) or ["no timing data"])]
+    return out + [""] + markdown_calculations(metrics) + [""]
+
+
+def generation_markdown(gen: dict, metrics: list[Metric]) -> list[str]:
+    from evaluation import generation_suite as gs
+
+    out = [f"## Use-case test: generating questions from source material", "",
+           f"The project's real generator was asked for {gen['count_per_passage']} questions from each of "
+           f"{len(gen['passages'])} passages (model: `{gen['model']}`"
+           + (f", judge: `{gen['judge']}`" if gen.get("judge") else "") + ").", ""]
+    out += markdown_table(metrics)
+    out += ["", "**Per passage**", "", "```"] + gs.passage_table(gen) + ["```", "", "**Why candidates were rejected**", "", "```"]
+    out += gs.rejection_breakdown(gen) + ["```", "", "<details><summary>All accepted questions (for human review)</summary>", "", "```"]
+    out += gs.questions_text(gen) + ["```", "", "</details>", ""]
+    return out + markdown_calculations(metrics) + [""]
+
+
+def bundle_markdown(bundle: dict, labels: list[str], ans_metrics, gen_metrics, met_metrics=()) -> str:
+    out = [f"# LLM performance report - {bundle['model']}", "", f"Generated {bundle['timestamp']}  ", ""]
+    if bundle.get("generation"):
+        out += generation_markdown(bundle["generation"], gen_metrics)
+    if bundle.get("answering"):
+        out += answering_markdown(bundle["answering"], labels, ans_metrics)
+    if bundle.get("metrics"):
+        from evaluation import metrics_suite as ms
+
+        out += ms.metrics_markdown(bundle["metrics"], list(met_metrics))
+    out += ["## How to read this report", "",
+            "- Every metric lists its formula and the numbers substituted into it (open the *Step-by-step calculations* blocks).",
+            "- Small samples are uncertain; confidence intervals are shown where they apply.",
+            "- Answer-key *correctness* needs a human: fill the `human_key_correct` column of the saved `labels_*.csv` with yes / no and run "
+            "`python evaluation/evaluate_llm.py --score-labels <that file>`."]
+    return "\n".join(out) + "\n"
+
+
+def comparison_sections(all_gen: list, all_ans: list, all_met: list) -> tuple:
+    return (("Use-case test: generating questions", all_gen), ("Question-answering benchmark", all_ans),
+            ("12 performance metrics", all_met))
+
+
+def comparison_markdown(bundles: list[dict], all_ans: list, all_gen: list, all_met: list | None = None) -> str:
+    names = [b["model"] for b in bundles]
+    out = [f"# Model comparison: {' vs '.join(names)}", "", f"Generated {datetime.now().isoformat(timespec='seconds')}", ""]
+    for title, sets in comparison_sections(all_gen, all_ans, all_met or [[] for _ in bundles]):
+        if not sets or any(not m for m in sets):
+            continue
+        out += [f"## {title}", "", "| Metric | " + " | ".join(names) + " | Better |", "|---|" + "---:|" * len(names) + "---|"]
+        by_name = [{m.name: m for m in ms} for ms in sets]
+        for m in sets[0]:
+            cells = " | ".join(val(d[m.name].value) if m.name in d else "-" for d in by_name)
+            out.append(f"| {m.name} | {cells} | {m.better} |")
+        if title.startswith("12"):
+            judges = [f"{b['model']} judged by {b['metrics'].get('judge') or 'nobody'}" for b in bundles if b.get("metrics")]
+            out += ["", f"`n/a` = not enough data to compute it (the per-model report gives the reason). Judges: {'; '.join(judges)}."]
+        out.append("")
+    return "\n".join(out) + "\n"
+
+
+def save_bundle(bundle: dict, labels: list[str], ans_metrics, gen_metrics, stamp: str, met_metrics=()) -> list[Path]:
+    """Writes results/<model>/report_<time>.md + .json (+ labels_<time>.csv for human review)."""
+    folder = RESULTS_DIR / slug(bundle["model"])
+    folder.mkdir(parents=True, exist_ok=True)
+    base = folder / f"report_{stamp}"
+    to_json = lambda ms: [{"name": m.name, "value": m.value, "better": m.better, "formula": m.formula} for m in ms]  # noqa: E731
+    payload = {"labels": labels, "bundles": [{**bundle, "answering_metrics": to_json(ans_metrics), "generation_metrics": to_json(gen_metrics)}]}
+    paths = []
+    for suffix, content in ((".json", json.dumps(payload, indent=2, ensure_ascii=False)),
+                            (".md", bundle_markdown(bundle, labels, ans_metrics, gen_metrics, met_metrics))):
+        path = Path(f"{base}{suffix}")  # not with_suffix(): model tags contain dots ("qwen2.5")
+        path.write_text(content, encoding="utf-8")
+        paths.append(path)
+    if bundle.get("generation"):
+        from evaluation import generation_suite as gs
+
+        csv_path = folder / f"labels_{stamp}.csv"
+        csv_path.write_text(gs.labels_csv(bundle["generation"]), encoding="utf-8-sig")
+        paths.append(csv_path)
+    return paths
+
+
+def print_generation_report(gen: dict, metrics: list[Metric]) -> None:
+    from evaluation import generation_suite as gs
+
+    bar = "=" * 100
+    print(f"\n{bar}\nUSE-CASE TEST - GENERATING QUESTIONS FROM SOURCE MATERIAL   model: {gen['model']}"
+          + (f"   judge: {gen['judge']}" if gen.get("judge") else "") + f"\n{bar}")
+    print("\nPER PASSAGE")
+    for line in gs.passage_table(gen):
+        print("  " + line)
+    print("\nWHY CANDIDATES WERE REJECTED")
+    for line in gs.rejection_breakdown(gen):
+        print("  " + line)
+    print("\nSUMMARY")
+    print_summary(metrics)
+    print("\nACCEPTED QUESTIONS (* = the model's answer key)")
+    for line in gs.questions_text(gen):
+        print("  " + line)
+    print(f"\n{bar}\nTHE CALCULATIONS, STEP BY STEP\n{bar}")
+    print_calculations(metrics)
 
 
 # =============================================================================================
 # CLI
 # =============================================================================================
+def check_environment() -> None:
+    missing = []
+    for mod in ("requests", "pydantic"):
+        try:
+            __import__(mod)
+        except ImportError:
+            missing.append(mod)
+    if missing:
+        raise SystemExit(
+            f"Missing Python package(s): {', '.join(missing)}.\n"
+            "Use the project's environment instead of the system Python:\n"
+            "    .venv\\Scripts\\python.exe evaluation\\evaluate_llm.py ...\n"
+            "or double-click run_evaluation.bat in the project folder."
+        )
+
+
+def ready(tag: str, args):
+    """An Ollama client for *tag*, after checking that Ollama is up and the model is installed (never downloads anything)."""
+    from services.ollama_client import OllamaClient
+
+    client = OllamaClient(args.base_url, tag, temperature=float(os.getenv("OLLAMA_TEMPERATURE", "0.4")), timeout_s=args.timeout)
+    status = client.status()
+    if not status.connected:
+        raise SystemExit(f"Cannot reach Ollama at {args.base_url}. Start Ollama and try again.")
+    if not status.model_installed:
+        raise SystemExit(f"Model '{tag}' is not installed. Run:  ollama pull {tag}")
+    return client
+
+
+def run_generation(model: str, judge: str | None, args, passages: list[dict]) -> dict:
+    from evaluation import generation_suite as gs
+
+    client = ready(model, args)
+    judge_client = None
+    if judge and judge != model:
+        try:
+            judge_client = ready(judge, args)
+        except SystemExit as exc:
+            print(f"  (judge model skipped: {exc})")
+    print(f"\n=== Use-case test: {model} generating {args.gen_count} questions from each of {len(passages)} passages"
+          + (f" (judge: {judge_client.model})" if judge_client else "") + " ===")
+    return gs.run_generation_suite(client, passages, count=args.gen_count, judge_client=judge_client)
+
+
+def run_metrics(model: str, judge: str | None, args) -> dict:
+    from evaluation import metrics_suite as ms
+
+    ready(model, args)
+    if judge and judge != model:
+        try:
+            ready(judge, args)
+        except SystemExit as exc:
+            print(f"  (judge model skipped: {exc})")
+            judge = None
+    else:
+        judge = None
+    return ms.run_metrics_suite(model, judge, args.base_url, args.timeout, limit=args.metrics_limit,
+                                temperature=float(os.getenv("OLLAMA_TEMPERATURE", "0.4")))
+
+
 def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)  # show progress live, even when piped
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--models", nargs="+", help="model tags to evaluate (default: OLLAMA_MODEL from .env)")
-    ap.add_argument("--dataset", type=Path, default=DEFAULT_DATASET, help="JSON file with the labelled questions")
-    ap.add_argument("--limit", type=int, help="only use the first N questions")
+    ap.add_argument("--suite", choices=["all", "generation", "answering", "metrics"], default="all",
+                    help="generation = the project's real task (write questions from material); answering = labelled quiz benchmark; "
+                         "metrics = the 12 performance metrics (quality, safety, speed, cost, reliability)")
+    ap.add_argument("--dataset", type=Path, default=DEFAULT_DATASET, help="answering suite: JSON file with labelled questions")
+    ap.add_argument("--limit", type=int, help="answering suite: only use the first N questions")
+    ap.add_argument("--passages", type=Path, help="generation suite: JSON file with source passages (default: evaluation/passages.json)")
+    ap.add_argument("--max-passages", type=int, help="generation suite: only use the first N passages")
+    ap.add_argument("--gen-count", type=int, default=3, help="generation suite: questions requested per passage (default 3)")
+    ap.add_argument("--metrics-limit", type=int, help="metrics suite: only use the first N items of each dataset")
+    ap.add_argument("--judge", default="auto", help="model that independently re-answers every generated question: auto (the other model "
+                    "when two are given), none, or a model tag")
     ap.add_argument("--base-url", default=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/"))
     ap.add_argument("--timeout", type=int, default=300, help="seconds per request")
-    ap.add_argument("--no-bench", action="store_true", help="skip the generation-speed benchmark")
-    ap.add_argument("--predictions", type=Path, help="recompute metrics from a saved results JSON (no Ollama needed)")
+    ap.add_argument("--no-bench", action="store_true", help="skip the generation-speed benchmark of the answering suite")
+    ap.add_argument("--predictions", type=Path, help="recompute metrics from a saved report .json (no Ollama needed)")
+    ap.add_argument("--score-labels", type=Path, help="score a labels_*.csv after a human filled the human_key_correct column")
     ap.add_argument("--demo", action="store_true", help="use a SIMULATED model to show the calculations without Ollama")
-    ap.add_argument("--no-save", action="store_true", help="do not write the .json/.md report files")
+    ap.add_argument("--no-save", action="store_true", help="do not write report files")
     args = ap.parse_args(argv)
 
-    items = load_dataset(args.dataset)
-    if args.limit:
-        items = items[: args.limit]
-    labels = labels_of(items)
+    if args.score_labels:
+        from evaluation import generation_suite as gs
+
+        metrics, info = gs.score_labels(args.score_labels)
+        print("\n".join(info))
+        print_summary(metrics)
+        print_calculations(metrics)
+        if metrics and not args.no_save:
+            out = Path(str(args.score_labels).rsplit(".", 1)[0] + "_scored.md")
+            out.write_text("# Human-labelled key accuracy\n\n" + "\n".join(info) + "\n\n" + "\n".join(markdown_table(metrics))
+                           + "\n\n" + "\n".join(markdown_calculations(metrics)) + "\n", encoding="utf-8")
+            print(f"\nSaved: {out}")
+        return 0
+
+    bundles: list[dict] = []
+    labels: list[str] = []
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     if args.predictions:
         saved = json.loads(args.predictions.read_text(encoding="utf-8"))
-        runs = saved["runs"]
-        labels = saved.get("labels", labels)
+        labels = saved.get("labels", [])
+        bundles = saved["bundles"] if "bundles" in saved else [
+            {"model": r["model"], "timestamp": r["timestamp"], "answering": r, "generation": None} for r in saved["runs"]]
     elif args.demo:
-        runs = [simulate_model(items, 0.8), simulate_model(items, 0.6, seed=5)]
+        items = load_dataset(args.dataset)[: args.limit] if args.limit else load_dataset(args.dataset)
+        labels = labels_of(items)
+        for run in (simulate_model(items, 0.8), simulate_model(items, 0.6, seed=5)):
+            bundles.append({"model": run["model"], "timestamp": run["timestamp"], "answering": run, "generation": None})
+        print("(demo mode: only the question-answering benchmark is simulated)")
     else:
+        check_environment()
         models = args.models or [os.getenv("OLLAMA_MODEL", "qwen2.5:3b")]
-        runs = [run_model(m, items, args.base_url, args.timeout, not args.no_bench) for m in models]
+        items = passages = None
+        if args.suite in ("all", "answering"):
+            items = load_dataset(args.dataset)
+            items = items[: args.limit] if args.limit else items
+            labels = labels_of(items)
+        if args.suite in ("all", "generation"):
+            from evaluation import generation_suite as gs
 
-    all_metrics = []
-    for run in runs:
-        preds = [Prediction(**p) for p in run["predictions"]]
-        metrics = compute_metrics(preds, labels)
-        all_metrics.append(metrics)
-        print_run_report(run, labels, metrics)
-    if len(runs) > 1:
+            passages = gs.load_passages(args.passages or gs.DEFAULT_PASSAGES)
+            passages = passages[: args.max_passages] if args.max_passages else passages
+        for idx, model in enumerate(models):
+            judge = None if args.judge == "none" else (models[(idx + 1) % len(models)] if args.judge == "auto" and len(models) > 1
+                                                          else (None if args.judge == "auto" else args.judge))
+            ans = run_model(model, items, args.base_url, args.timeout, not args.no_bench) if items else None
+            gen = run_generation(model, judge, args, passages) if passages else None
+            met = run_metrics(model, judge, args) if args.suite in ("all", "metrics") else None
+            bundles.append({"model": model, "timestamp": datetime.now().isoformat(timespec="seconds"), "answering": ans, "generation": gen,
+                            "metrics": met})
+
+    from evaluation import metrics_suite as ms
+
+    all_ans, all_gen, all_met = [], [], []
+    for b in bundles:
+        ans_m = compute_metrics([Prediction(**p) for p in b["answering"]["predictions"]], labels) if b.get("answering") else []
+        gen_m = generation_metrics_for(b["generation"]) if b.get("generation") else []
+        met_m = ms.to_metrics(b["metrics"]) if b.get("metrics") else []
+        all_ans.append(ans_m)
+        all_gen.append(gen_m)
+        all_met.append(met_m)
+        if b.get("generation"):
+            print_generation_report(b["generation"], gen_m)
+        if b.get("answering"):
+            print_run_report(b["answering"], labels, ans_m)
+        if b.get("metrics"):
+            ms.print_metrics_report(b["metrics"], met_m)
+
+    if len(bundles) > 1:
         print("\n" + "=" * 100 + "\nCOMPARISON\n" + "=" * 100)
-        for line in comparison_table(runs, all_metrics):
-            print("  " + line)
+        for title, sets in comparison_sections(all_gen, all_ans, all_met):
+            if all(sets):
+                print(f"\n{title}")
+                fake_runs = [{"model": b["model"]} for b in bundles]
+                for line in comparison_table(fake_runs, sets):
+                    print("  " + line)
+
     if not args.no_save and not args.predictions:
-        json_path, md_path = save_results(runs, labels, all_metrics)
-        print(f"\nSaved: {json_path}\n       {md_path}")
+        print()
+        for b, ans_m, gen_m, met_m in zip(bundles, all_ans, all_gen, all_met):
+            for path in save_bundle(b, labels, ans_m, gen_m, stamp, met_m):
+                print(f"Saved report: {path}")
+        if len(bundles) > 1:
+            comp = RESULTS_DIR / f"comparison_{stamp}.md"
+            comp.write_text(comparison_markdown(bundles, all_ans, all_gen, all_met), encoding="utf-8")
+            print(f"Saved comparison: {comp}")
+        if any(b.get("generation") for b in bundles):
+            print("\nNext step (optional, for the real key accuracy): open the labels_*.csv file, write yes/no in the "
+                  "human_key_correct column, then run:\n    python evaluation/evaluate_llm.py --score-labels <that file>")
     return 0
+
+
+def generation_metrics_for(gen: dict) -> list[Metric]:
+    from evaluation import generation_suite as gs
+
+    return gs.generation_metrics(gen)
 
 
 if __name__ == "__main__":
