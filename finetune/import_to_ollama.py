@@ -72,7 +72,7 @@ def main(argv: list[str] | None = None) -> int:
 
     gguf = args.gguf.resolve()
     if not gguf.exists():
-        raise SystemExit(f"{gguf} does not exist - download it from the Colab notebook first.")
+        raise SystemExit(f"{gguf} does not exist - download it from the Kaggle or Colab notebook first.")
     try:
         template, params = base_template(args.base_url, args.base)
     except requests.RequestException as exc:

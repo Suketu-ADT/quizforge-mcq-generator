@@ -69,6 +69,28 @@ def find_gguf(search_dirs: list[str], started: float) -> str | None:
     return max(hits, key=os.path.getmtime) if hits else None
 
 
+def _size(path: Path) -> int:
+    if path.is_file():
+        return path.stat().st_size
+    return sum(p.stat().st_size for p in path.rglob("*") if p.is_file()) if path.exists() else 0
+
+
+def remove_intermediates(search_dirs: list[str], started: float, keep: Path, dirs: list[Path]) -> int:
+    """Delete what the GGUF export leaves behind (merged 16-bit weights, f16/bf16 GGUF): ~15-30 GB for a 7B model, which
+    would fill a 20 GB Kaggle output folder. Only files created by this export are touched; *keep* is never removed."""
+    keep = keep.resolve()
+    freed = 0
+    for path in {Path(p).resolve() for d in search_dirs for p in glob.glob(os.path.join(d, "**", "*.gguf"), recursive=True)}:
+        if path != keep and path.stat().st_mtime >= started - 5:
+            freed += _size(path)
+            path.unlink()
+    for d in dirs:
+        if d.exists() and d.resolve() != keep.parent:
+            freed += _size(d)
+            shutil.rmtree(d, ignore_errors=True)
+    return freed
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--base", required=True, help="e.g. unsloth/Qwen2.5-3B-Instruct-bnb-4bit")
@@ -83,6 +105,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-seq", type=int, default=2048)
     ap.add_argument("--check", type=int, default=20, help="validation prompts for the format check (0 = skip)")
     ap.add_argument("--no-gguf", action="store_true")
+    ap.add_argument("--keep-intermediate", action="store_true",
+                    help="keep the merged 16-bit weights and extra GGUF files the export leaves behind (several GB)")
     args = ap.parse_args(argv)
 
     from unsloth import FastLanguageModel, is_bfloat16_supported  # GPU-only imports
@@ -152,6 +176,10 @@ def main(argv: list[str] | None = None) -> int:
         report["gguf"] = str(final)
         report["gguf_gb"] = round(final.stat().st_size / 1e9, 2)
         print(f"GGUF: {final} ({report['gguf_gb']} GB)")
+        if not args.keep_intermediate:
+            freed = remove_intermediates([str(gguf_dir), str(args.out), "."], started, keep=final,
+                                         dirs=[gguf_dir, args.out / f"{args.name}-checkpoints"])
+            print(f"removed export intermediates: {freed / 1e9:.1f} GB freed")
 
     (args.out / f"{args.name}-report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     return 0

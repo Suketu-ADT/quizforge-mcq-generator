@@ -204,7 +204,7 @@ sample count and an explicit status when it cannot be computed (`n/a`, never a m
 Full reference: [`docs/EVALUATION.md`](docs/EVALUATION.md).
 
 ### Fine-tuning
-Both models can be fine-tuned for this exact task (QLoRA on a free Colab GPU; SciQ plus filtered questions written by the
+Both models can be fine-tuned for this exact task (QLoRA on a free Kaggle or Colab GPU; SciQ plus filtered questions written by the
 Quality model, all in the app's own prompt and JSON format) and then run locally in Ollama. See
 [`finetune/README.md`](finetune/README.md).
 

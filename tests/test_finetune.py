@@ -148,3 +148,25 @@ def test_colab_bundle_contains_code_only():
     names = [p.relative_to(make_colab_bundle.ROOT).as_posix() for p in make_colab_bundle.bundle_files()]
     assert "finetune/train.py" in names and "services/question_generator.py" in names and "config.py" in names
     assert not [n for n in names if n.endswith((".db", ".env", ".gguf", ".jsonl", ".pyc")) or "/exports/" in n or "/data/" in n]
+
+
+# ------------------------------------------------------------------------------------------- export clean-up
+def test_export_cleanup_keeps_the_final_model_and_adapter(tmp_path):
+    import time
+
+    from finetune.train import remove_intermediates
+
+    out = tmp_path / "exports"
+    merged = out / "quizforge-7b-gguf"
+    merged.mkdir(parents=True)
+    (merged / "model-00001.safetensors").write_bytes(b"x" * 1000)
+    (merged / "unsloth.BF16.gguf").write_bytes(b"x" * 500)
+    adapter = out / "quizforge-7b-lora"
+    adapter.mkdir()
+    (adapter / "adapter_model.safetensors").write_bytes(b"x" * 10)
+    final = out / "quizforge-7b.Q4_K_M.gguf"
+    final.write_bytes(b"x" * 100)
+    started = time.time() - 1
+    freed = remove_intermediates([str(merged), str(out)], started, keep=final, dirs=[merged, out / "quizforge-7b-checkpoints"])
+    assert freed == 1500
+    assert final.exists() and adapter.exists() and not merged.exists()
