@@ -203,6 +203,11 @@ TTFT p95, End-to-End Latency p95, Cost per Successful Task and Error Rate - each
 sample count and an explicit status when it cannot be computed (`n/a`, never a made-up number).
 Full reference: [`docs/EVALUATION.md`](docs/EVALUATION.md).
 
+### Fine-tuning
+Both models can be fine-tuned for this exact task (QLoRA on a free Colab GPU; SciQ plus filtered questions written by the
+Quality model, all in the app's own prompt and JSON format) and then run locally in Ollama. See
+[`finetune/README.md`](finetune/README.md).
+
 ## Project structure
 ```
 quizforge-mcq-generator/
