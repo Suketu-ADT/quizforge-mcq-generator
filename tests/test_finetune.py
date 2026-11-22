@@ -122,6 +122,13 @@ def test_jsonl_roundtrip(tmp_path):
     assert P.read_jsonl(path) == ex
 
 
+def test_jsonl_keeps_unicode_line_separators_inside_a_record(tmp_path):
+    # SciQ text contains U+2028 and similar characters; JSON leaves them unescaped, so they must not split a record
+    rows = [{"support": "Cells divide. Mitosis has phases.\x85End\x0c."}, {"support": "Second row"}]
+    path = P.write_jsonl(tmp_path / "x.jsonl", rows)
+    assert P.read_jsonl(path) == rows
+
+
 # ----------------------------------------------------------------------------------------------- Ollama import
 QWEN_TEMPLATE = "{{- if .System }}<|im_start|>system\n{{ .System }}<|im_end|>\n{{ end }}..."
 

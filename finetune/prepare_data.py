@@ -171,7 +171,8 @@ def write_jsonl(path: str | Path, rows: list[dict]) -> Path:
 
 
 def read_jsonl(path: str | Path) -> list[dict]:
-    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
+    # split on "\n" only: splitlines() also breaks on characters such as U+2028 that occur inside SciQ's text
+    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8").split("\n") if line.strip()]
 
 
 def summary(examples: list[dict]) -> dict:
