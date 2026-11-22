@@ -170,3 +170,18 @@ def test_export_cleanup_keeps_the_final_model_and_adapter(tmp_path):
     freed = remove_intermediates([str(merged), str(out)], started, keep=final, dirs=[merged, out / "quizforge-7b-checkpoints"])
     assert freed == 1500
     assert final.exists() and adapter.exists() and not merged.exists()
+
+
+def test_sequence_length_option_follows_the_installed_trl():
+    from finetune.train import length_option
+
+    class NewTRL:
+        def __init__(self, max_length=1024, dataset_text_field="text"):
+            pass
+
+    class OldTRL:
+        def __init__(self, max_seq_length=1024, dataset_text_field="text"):
+            pass
+
+    assert length_option(NewTRL) == "max_length"
+    assert length_option(OldTRL) == "max_seq_length"

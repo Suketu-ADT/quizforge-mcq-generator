@@ -62,6 +62,13 @@ def format_check(model, tokenizer, examples: list[dict], max_new_tokens: int = 9
             "question_validity_rate": (valid / questions) if questions else None, "questions": questions}
 
 
+def length_option(config_cls) -> str:
+    """TRL renamed SFTConfig's max_seq_length to max_length; use whichever this installed version accepts."""
+    import inspect
+
+    return "max_length" if "max_length" in inspect.signature(config_cls.__init__).parameters else "max_seq_length"
+
+
 def find_gguf(search_dirs: list[str], started: float) -> str | None:
     hits = [p for d in search_dirs for p in glob.glob(os.path.join(d, "**", "*.gguf"), recursive=True)
             if os.path.getmtime(p) >= started - 5]
@@ -133,7 +140,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"train {len(train_ds)} examples ({dropped_train} too long, dropped), val {len(val_ds)} ({dropped_val} dropped)")
 
     config = SFTConfig(
-        dataset_text_field="text", max_seq_length=args.max_seq, packing=False,
+        dataset_text_field="text", packing=False, **{length_option(SFTConfig): args.max_seq},
         per_device_train_batch_size=args.batch, per_device_eval_batch_size=args.batch, gradient_accumulation_steps=args.grad_accum,
         num_train_epochs=args.epochs, learning_rate=args.lr, warmup_ratio=0.03, lr_scheduler_type="linear",
         optim="adamw_8bit", weight_decay=0.01, fp16=not is_bfloat16_supported(), bf16=is_bfloat16_supported(),
@@ -164,13 +171,22 @@ def main(argv: list[str] | None = None) -> int:
         report["format_check"] = format_check(model, tokenizer, val_rows[: args.check])
         print("format check (no schema constraint):", json.dumps(report["format_check"], indent=2))
 
+    report_path = args.out / f"{args.name}-report.json"
+    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")  # kept even if the export below fails
+
     if not args.no_gguf:
         started = time.time()
         gguf_dir = args.out / f"{args.name}-gguf"
-        model.save_pretrained_gguf(str(gguf_dir), tokenizer, quantization_method="q4_k_m")
-        found = find_gguf([str(gguf_dir), str(args.out), "."], started)
-        if not found:
-            raise SystemExit("GGUF export finished but no .gguf file was found - check the export log above.")
+        try:
+            model.save_pretrained_gguf(str(gguf_dir), tokenizer, quantization_method="q4_k_m")
+            found = find_gguf([str(gguf_dir), str(args.out), "."], started)
+            if not found:
+                raise RuntimeError("the export finished but no .gguf file was found")
+        except Exception as exc:  # the trained adapter is saved above, so the training is not lost
+            report["gguf_error"] = f"{type(exc).__name__}: {exc}"
+            report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+            print(f"GGUF export failed ({report['gguf_error']}). The LoRA adapter is saved in {adapter_dir}.")
+            return 1
         final = args.out / f"{args.name}.Q4_K_M.gguf"
         shutil.move(found, final)
         report["gguf"] = str(final)
@@ -181,7 +197,7 @@ def main(argv: list[str] | None = None) -> int:
                                          dirs=[gguf_dir, args.out / f"{args.name}-checkpoints"])
             print(f"removed export intermediates: {freed / 1e9:.1f} GB freed")
 
-    (args.out / f"{args.name}-report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     return 0
 
 

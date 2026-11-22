@@ -29,14 +29,21 @@ The notebook runs on **Kaggle** or **Google Colab** and detects which one it is 
 2. **Train** (about 2-3 hours):
    - **Kaggle** (free, ~30 GPU hours a week): [kaggle.com](https://www.kaggle.com/) -> *Create* -> *New Notebook* ->
      *File* -> *Import Notebook* -> upload `finetune/QuizForge_finetune.ipynb` (or paste its GitHub URL). In the right-hand
-     panel set *Accelerator* -> **GPU T4 x2** and *Internet* -> **On** (needs a verified phone number), then *Run All*.
+     panel set *Accelerator* -> **GPU T4 x2** and *Internet* -> **On** (needs a verified phone number; without it the
+     notebook stops at the internet check).
+     - **Quick test first** (~30 min): set `QUICK_TEST = True` in the first cell and *Run All*. It runs every step on a
+       tiny dataset (3B only, model named `quizforge-3b-test`), including the GGUF export.
+     - **Real run**: set `QUICK_TEST = False`, then *Save Version* -> **Save & Run All (Commit)**. It runs in the
+       background, so you can close the browser, and the files stay in that version's *Output* tab.
      The heavy work happens in `/tmp` (the 7B export needs ~35 GB at peak; `/kaggle/working` holds only 20 GB) and the
      finished files are copied to `/kaggle/working`.
    - **Colab:** open the notebook, *Runtime -> Change runtime type -> T4 GPU*, *Run all*. Finished files are copied to
      `MyDrive/quizforge_finetune`.
 3. **Download** `quizforge-3b.Q4_K_M.gguf` (~2 GB), `quizforge-7b.Q4_K_M.gguf` (~4.7 GB) and the two `-report.json`
-   files into `finetune\exports\` - on Kaggle from the *Output* panel, **before** you end the session (files of an
-   interactive session are deleted when it stops); on Colab from Google Drive.
+   files into `finetune\exports\` - on Kaggle from the version's *Output* tab (after an interactive run: from the
+   *Output* panel **before** you end the session, since its files are deleted when it stops); on Colab from Google Drive.
+   The `-lora.zip` files are a small backup of the trained adapters: if a GGUF export fails, the report says so
+   (`gguf_error`) and the training is kept in the zip.
 4. **Import** - double-click `finetune\import_finetuned.bat`. It creates the Ollama models `quizforge-3b` and
    `quizforge-7b`, reusing the base models' chat template (the format the models were trained on).
 5. **Measure** - double-click `finetune\compare_finetuned.bat`. It runs all three tests of `run_evaluation.bat` on
