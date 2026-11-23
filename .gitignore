@@ -11,3 +11,8 @@ data/*.db-journal
 finetune/data/
 finetune/exports/
 finetune/quizforge_colab.zip
+
+# fine-tuned model files are shared separately (model_files/README.md)
+model_files/*.gguf
+# the team zip made by make_share_zip.bat
+dist/

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>QuizForge</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script type="module" src="/static/js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <img src="/static/favicon.svg" alt="" width="34" height="34">
+        <div>
+          <div class="brand-name">QuizForge</div>
+          <div class="brand-sub">Local MCQ generator</div>
+        </div>
+      </div>
+      <nav id="nav" class="nav"></nav>
+      <div class="sidebar-foot">
+        <button class="status-pill" id="status-pill" type="button" title="Model status (opens Settings)">
+          <span class="dot"></span><span class="label">Checking...</span>
+        </button>
+        <div class="sidebar-note">Runs on this computer. No cloud AI.</div>
+      </div>
+    </aside>
+    <div class="main-col">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"></button>
+        <div class="topbar-title" id="topbar-title"></div>
+        <div class="topbar-actions">
+          <span class="model-chip" id="model-chip" hidden></span>
+          <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch light / dark theme"></button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1"></main>
+    </div>
+  </div>
+  <div class="scrim" id="scrim" hidden></div>
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">QuizForge needs JavaScript enabled in your browser.</p></noscript>
+</body>
+</html>

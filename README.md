@@ -2,279 +2,232 @@
 
 # QuizForge
 
-### Automatic MCQ Quiz Generator powered by a local LLM
+### Automatic MCQ Quiz Generator powered by a local, fine-tuned LLM
 
-Turn notes, PDFs and documents into validated multiple-choice quizzes - **entirely on your own machine**.
+Turn notes, PDFs and documents into validated multiple-choice quizzes - **entirely on your own computer**.
 
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit&logoColor=white)
+![Flask](https://img.shields.io/badge/Backend-Flask-000000?logo=flask&logoColor=white)
+![Frontend](https://img.shields.io/badge/Frontend-HTML%20%7C%20CSS%20%7C%20JS-E34F26?logo=html5&logoColor=white)
 ![Ollama](https://img.shields.io/badge/LLM%20runtime-Ollama-000000)
-![Model](https://img.shields.io/badge/Model-Qwen%202.5-6E56CF)
+![Model](https://img.shields.io/badge/Model-Qwen%202.5%20%2B%20QLoRA-6E56CF)
 ![Storage](https://img.shields.io/badge/Storage-SQLite-003B57?logo=sqlite&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-178%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-381%20passing-brightgreen)
 ![Cloud AI](https://img.shields.io/badge/cloud%20AI-none-informational)
 
 </div>
 
 > **Problem statement PS 97 - Automatic MCQ Quiz Generator.**
-> Generate educationally useful multiple-choice questions from learning material using **Qwen 2.5 running locally through Ollama**.
-> No OpenAI, Gemini, Claude, Groq or Hugging Face hosted inference is used anywhere, and no API key is required.
+> Generate educationally useful multiple-choice questions from learning material using **Qwen 2.5 running locally through Ollama**,
+> fine-tuned for this exact task. No OpenAI, Gemini, Claude, Groq or Hugging Face hosted inference is used anywhere, and no API key is needed.
 
 ---
 
-## Table of contents
-1. [Why this project](#why-this-project)
+## Contents
+1. [Quick start for the team](#quick-start-for-the-team)
 2. [Features](#features)
-3. [How it works](#how-it-works)
-4. [Quick start](#quick-start)
-5. [Configuration](#configuration)
-6. [Using the app](#using-the-app)
+3. [The models](#the-models)
+4. [How it works](#how-it-works)
+5. [Architecture and API](#architecture-and-api)
+6. [Configuration](#configuration)
 7. [Validation: how answers are checked](#validation-how-answers-are-checked)
 8. [Measuring LLM performance](#measuring-llm-performance)
-9. [Project structure](#project-structure)
-10. [Testing](#testing)
-11. [Privacy and security](#privacy-and-security)
-12. [Limitations](#limitations)
-13. [Roadmap](#roadmap)
-14. [Troubleshooting](#troubleshooting)
-15. [Further reading](#further-reading)
+9. [Fine-tuning](#fine-tuning)
+10. [Project structure](#project-structure)
+11. [Testing](#testing)
+12. [Privacy and security](#privacy-and-security)
+13. [Limitations and troubleshooting](#limitations-and-troubleshooting)
 
 ---
 
-## Why this project
-Writing good practice questions by hand is slow, and sending study material to a cloud AI raises privacy and cost concerns.
-QuizForge keeps the whole pipeline local and treats the LLM as an **untrusted question writer**: the model proposes candidates, and ordinary deterministic code
-parses, validates, de-duplicates, stores, scores and analyses them. A human reviews the result before it is used.
+## Quick start for the team
+
+You need **Windows 10/11**, about **10 GB of free disk space** and **8 GB of RAM** (16 GB for the Quality models).
+
+| Step | What to do |
+|---|---|
+| 1 | Install **Python 3.11 or 3.12** from [python.org](https://www.python.org/downloads/). Tick **"Add python.exe to PATH"**. |
+| 2 | Install **Ollama** from [ollama.com/download](https://ollama.com/download) and open it once. |
+| 3 | Get the code: unzip `QuizForge.zip`, or `git clone https://github.com/Suketu-ADT/quizforge-mcq-generator.git`. |
+| 4 | Copy the two fine-tuned model files (shared on the team Drive) into the **`model_files`** folder: `quizforge-3b.Q4_K_M.gguf` and `quizforge-7b.Q4_K_M.gguf`. Optional - without them the app uses the base models. |
+| 5 | Double-click **`setup_models.bat`**. It asks before downloading each base model (`qwen2.5:3b` ~2 GB, `qwen2.5:7b` ~4.7 GB) and imports the fine-tuned files. |
+| 6 | Double-click **`start.bat`**. The first run installs the Python packages; then the app opens at **<http://127.0.0.1:5000>**. Keep the black window open while you use it. |
+
+The app picks the fine-tuned model automatically when it is installed. Switch models any time on the **Settings** page.
+
+<details>
+<summary>Manual setup (any operating system)</summary>
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1          # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+ollama pull qwen2.5:3b              # optional: ollama pull qwen2.5:7b
+python -m finetune.import_to_ollama --gguf model_files/quizforge-3b.Q4_K_M.gguf --name quizforge-3b --base qwen2.5:3b
+python app.py                       # options: --port 5050 --no-browser --debug
+```
+</details>
 
 ## Features
 
 | Area | What you get |
 |---|---|
-| **Input** | Paste text or upload **PDF / DOCX / TXT** (type and size validated, scans and corrupt files handled). Extracted text is shown for review before anything is generated. |
+| **Input** | Drag and drop **PDF / DOCX / TXT** (type and size checked, scans and corrupt files handled) or paste text. The extracted text is shown for review first. Sentences that try to give orders to the AI are flagged before you generate. |
 | **Generation** | 5 / 10 / 15 / 20 or a custom number (up to 50) of questions; Easy / Medium / Hard / Mixed; 2-6 options; Conceptual / Factual / Application / Mixed styles; optional instructions. |
-| **Live and stoppable** | Questions stream in one by one as soon as they pass validation. A **Stop** button keeps everything produced so far. |
-| **Model switch** | Flip between **Fast** (`qwen2.5:3b`, default) and **Quality** (`qwen2.5:7b`) on the Settings page, or with the Fast / Quality toggle on Generate Quiz. Models that are not installed cannot be selected and show the exact `ollama pull` command. |
-| **Reliability** | JSON-schema constrained output, safe parsing, a bounded repair loop (never infinite), source-grounding check and duplicate detection. |
-| **Answer-key double-check** | Optional: the model re-answers each question *without* seeing the key; disagreements get a "review the key" badge. |
-| **Human review** | Editable cards: edit, regenerate one question, delete, add manually. The correct answer stays hidden until revealed. Edits are re-validated. |
-| **Quiz mode** | Clickable option cards with instant right/wrong feedback and animation (or exam mode with no reveal), question palette, flag for review, timer or countdown, submit confirmation, retake, restart, **retry only missed questions**, keyboard shortcuts. |
-| **Never lose work** | Unsaved drafts auto-save to SQLite; unfinished quizzes can be resumed; the Dashboard shows "Continue" cards. |
-| **Analytics** | Score, accuracy, per-topic and per-difficulty charts (Plotly), score trend, rule-based recommendations from your real answers. |
-| **Question bank** | Search and filter, rename, duplicate, delete, edit, export. |
-| **Exports** | Question paper and answer key as **PDF** or HTML, answer key CSV, questions JSON/CSV (with or without answers), results JSON/CSV. |
-| **Polish** | Light and dark themes, first-run guide, responsive layout, accessible focus styles, reduced-motion support, one-click `start.bat`. |
+| **Live and stoppable** | Questions stream in one by one as soon as they pass validation, with progress and elapsed time. **Stop** keeps everything produced so far. The job keeps running if you open another page. |
+| **Model choice** | Four models: the two fine-tuned QuizForge models and the two base Qwen 2.5 models, switchable on the Generate page and in Settings. Models that are not installed cannot be chosen and Settings shows how to install them. |
+| **Reliability** | JSON-schema constrained output, safe parsing, a bounded repair loop (never infinite), source-grounding check, duplicate detection (including two wordings of the same fact), names restored to the material's spelling (ReAct, BFS, Calvin). |
+| **Answer-key double-check** | Optional: the model re-answers each question *without* seeing the key; disagreements get a "Review the key" badge. |
+| **Human review** | Question cards: show/hide the answer, edit inline (re-validated by the server), regenerate one question, delete, add your own. |
+| **Quiz mode** | One-at-a-time or all-on-one-page, instant feedback or exam mode, stopwatch or countdown, question palette, flag for review, submit confirmation, keyboard shortcuts (`A`-`F`, `1`-`6`, arrows, `M`), retake, **retry only the missed questions**. |
+| **Never lose work** | Unsaved drafts are saved on the server, unfinished quizzes can be resumed, pasted material survives a page reload. |
+| **Analytics** | Score trend, accuracy by topic and difficulty, attempt history and rule-based study recommendations from your real answers. |
+| **Question bank** | Search and filter, rename, duplicate, edit, delete, export. |
+| **Exports** | Question paper and answer key as **PDF** or HTML, answer key CSV, questions JSON/CSV with or without answers, results CSV/JSON. |
+| **Polish** | Light and dark themes, responsive layout (phone to desktop), accessible focus styles and labels, reduced-motion support, no external fonts or scripts (works offline). |
+
+## The models
+
+| Name in the app | Ollama tag | Size | What it is |
+|---|---|---|---|
+| **Tuned Fast** (default when installed) | `quizforge-3b` | ~1.9 GB | Qwen 2.5 3B fine-tuned with QLoRA for this app |
+| **Tuned Quality** | `quizforge-7b` | ~4.7 GB | Qwen 2.5 7B fine-tuned with QLoRA for this app |
+| Fast | `qwen2.5:3b` | ~1.9 GB | Base model (also needed to import `quizforge-3b`) |
+| Quality | `qwen2.5:7b` | ~4.7 GB | Base model (also needed to import `quizforge-7b`) |
+
+Model tags are shown only on the Settings page; elsewhere the app uses the names in the first column.
+Speed depends on your hardware (on a CPU-only laptop the 3B models write roughly 10-12 tokens/s).
 
 ## How it works
 
 ```mermaid
 flowchart LR
-    U[User] --> UI[Streamlit UI]
-    UI --> DP[Document Processor<br/>extract - clean - chunk]
-    DP --> QG[Question Generator<br/>prompts - batches - repair loop]
-    QG --> LLM[Local Ollama<br/>Qwen 2.5]
-    LLM --> QV[Question Validator<br/>schema - grounding - duplicates]
-    QV --> DB[(SQLite)]
-    DB --> QE[Quiz Engine<br/>scoring from stored key]
-    QE --> RA[Results and Analytics]
-    QV -. invalid output: repair, max 2 retries .-> QG
+    U[Browser<br/>HTML, CSS, JS] -- JSON over HTTP --> API[Flask API<br/>webapp/api.py]
+    API --> DP[Document processor<br/>extract - clean - chunk]
+    DP --> MG[Material guard<br/>drops AI instructions]
+    MG --> QG[Question generator<br/>prompts - batches - repair loop]
+    QG --> LLM[Ollama on this computer<br/>Qwen 2.5 / QuizForge models]
+    LLM --> QV[Question validator<br/>schema - grounding - duplicates]
+    QV --> API
+    API --> DB[(SQLite)]
+    QV -. invalid: repair, max 2 retries .-> QG
 ```
 
-**Generation sequence**
+**Design principle:** the LLM only *writes candidates*. Everything that decides what is shown, stored or scored is ordinary code.
+A generation runs as a background job on the server; the browser polls it every half second and shows each new question.
 
-```mermaid
-sequenceDiagram
-    participant UI as Streamlit UI
-    participant G as Question Generator
-    participant O as Ollama (Qwen 2.5)
-    participant V as Validator
-    UI->>G: material + settings
-    G->>G: chunk text, plan batches of up to 3 questions
-    loop each batch (1 try + up to 2 repairs)
-        G->>O: system prompt + chunk + JSON schema (streamed)
-        O-->>G: tokens (progress shown in UI)
-        G->>V: parse, normalise, validate each question
-        V-->>G: accepted / rejected + reason
-        G-->>UI: each accepted question immediately
-    end
-    G-->>UI: result, shortfall report if fewer than requested
-```
+## Architecture and API
 
-**Design principle:** the LLM only *writes candidates*. Everything that decides what is shown, stored or scored is deterministic code.
+* **Front end** - `webapp/static/`: one `index.html`, one stylesheet and ES-module JavaScript (no framework, no build step). A hash router switches between seven pages (Dashboard, Generate Quiz, Question Bank, Take a Quiz, Analytics, Settings, About). All model and user text is inserted as text, never as HTML.
+* **Back end** - `webapp/` (Flask, served by Waitress): a JSON API over the existing Python services. Flask was chosen over Django because the app is a small single-user API on top of existing services and SQLite: it needs no ORM, admin site or migrations.
 
-## Quick start
-
-### Prerequisites
-- Windows 10/11 (the code is cross-platform; `start.bat` is Windows-only)
-- **Python 3.11 or newer** (3.12 recommended)
-- **[Ollama](https://ollama.com/download)** and at least one Qwen 2.5 model
-- Enough RAM/VRAM for the model you choose (see the note below)
-
-### 1. Install Ollama and pull a model
-```powershell
-ollama pull qwen2.5:3b      # default ("Fast")
-ollama pull qwen2.5:7b      # optional ("Quality") - switch to it on the Settings page
-```
-Model library: <https://ollama.com/library/qwen2.5>. API docs: <https://docs.ollama.com/api>.
-
-| Tag | Download size (approx.) | Notes |
-|---|---|---|
-| `qwen2.5:3b` | ~2 GB | **Default - "Fast".** Lightest and quickest; answer keys are less reliable |
-| `qwen2.5:7b` | ~4.7 GB | **"Quality".** Slower, needs more RAM, noticeably better questions and keys |
-| `qwen2.5:14b` | ~9 GB | Best quality, needs far more memory |
-
-Speed and quality depend on your hardware; nothing here is a guarantee. (In development, `qwen2.5:3b` on a CPU-only laptop produced roughly 8-10 tokens/s.)
-
-### 2. Run it
-
-**Easiest (Windows):** double-click **`start.bat`**. It creates the virtual environment on first run, starts Ollama if needed and opens the app.
-
-**Manually:**
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-copy .env.example .env        # then edit OLLAMA_MODEL if needed
-streamlit run app.py
-```
-Open <http://localhost:8501>. The app starts even if Ollama is not running; it shows *Disconnected* and explains what to do.
-
-> **Honest privacy note:** your material is sent only to the Ollama endpoint you configure (default `http://localhost:11434`). Installing dependencies and the first model download need internet; generation afterwards runs locally. The app never downloads models by itself.
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/status`, `GET/PUT /api/settings`, `POST /api/settings/test`, `POST /api/model` | Ollama status, model list, settings, model switch |
+| `POST /api/extract`, `POST /api/material/check` | Read an uploaded file; counts and injection preview for the text box |
+| `POST /api/generate`, `POST /api/check-keys`, `GET /api/jobs/<id>?since=n`, `POST /api/jobs/<id>/stop` | Background jobs: generation and answer-key checks |
+| `POST /api/questions/validate`, `POST /api/questions/regenerate` | Re-check an edited question; rewrite one question |
+| `GET/PUT/DELETE /api/draft`, `GET/PUT/DELETE /api/session` | Unsaved draft; unfinished quiz |
+| `GET/POST /api/quizzes`, `GET/PUT/PATCH/DELETE /api/quizzes/<id>`, `POST /api/quizzes/<id>/duplicate` | Question bank |
+| `GET /api/quizzes/<id>/export/<kind>`, `POST /api/export/<kind>` | PDF / HTML / CSV / JSON exports (saved quiz or draft) |
+| `POST /api/quizzes/<id>/score`, `GET /api/attempts/<id>/export/<csv or json>`, `DELETE /api/attempts` | Scoring from the stored key, results export, clear history |
+| `GET /api/dashboard`, `GET /api/analytics` | Dashboard numbers and analytics |
 
 ## Configuration
-Settings come from environment variables (`.env`) and can be changed on the **Settings** page (saved in SQLite).
+Settings come from environment variables (`.env`, created from `.env.example` by `start.bat`) and can be changed on the **Settings** page (saved in SQLite).
 
 | Variable | Default | Meaning |
 |---|---|---|
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server |
-| `OLLAMA_MODEL` | `qwen2.5:3b` | Starting model; any installed tag works. Switch Fast / Quality on the Settings page |
+| `OLLAMA_MODEL` | *(unset)* | Unset: the first installed of `quizforge-3b`, `qwen2.5:3b`, `quizforge-7b`, `qwen2.5:7b`. Set it to force a tag |
 | `OLLAMA_TEMPERATURE` | `0.4` | Lower = more deterministic questions |
 | `OLLAMA_TIMEOUT` | `300` | Seconds (applies between streamed chunks) |
 | `MAX_INPUT_CHARS` | `60000` | Longer input is refused, never silently truncated |
 | `MCQ_DB_PATH` | `data/quizzes.db` | SQLite file location |
-
-The model tag is shown only on the Settings page; elsewhere the UI says "the local model". Themes switch from the three-dot menu (top right).
-
-## Using the app
-1. **Generate Quiz** - upload a file or paste text, choose count, difficulty and options, press *Generate*. Watch questions stream in; press *Stop* any time.
-2. **Review** - reveal answers, edit, regenerate or delete questions. Optionally run *Double-check answer keys*.
-3. **Save** to the question bank (or *Save and take quiz*).
-4. **Take a Quiz** - click an option to see instantly whether it is right. Keyboard: `A`-`D` choose, `<-` `->` move, `M` flag.
-5. **Results** - score, charts, recommendations and explanations; *Retry missed* builds a short quiz from your wrong answers.
-6. **Export** the question paper and the answer key separately.
 
 ## Validation: how answers are checked
 Every model reply goes through `services/question_validator.py` before it can be shown:
 
 1. **Safe parsing** - `json.loads` only (never `eval`); markdown fences stripped.
 2. **Normalisation** - echoed `<material>` tags removed; options given as strings or a dict accepted; an answer given as option text is mapped to its letter. Nothing is invented.
-3. **Schema (Pydantic)** - non-empty text; 2-6 options with unique ids and unique texts; `correct_answer` references a real option; difficulty is Easy, Medium or Hard; exact configured option count.
-4. **Options not inside the question text** (regex check).
-5. **Grounding** - the quoted `source_excerpt` must appear in the source chunk: an exact match after normalising case, quotes and whitespace, or a contiguous match covering at least 80% (`difflib`).
-6. **Duplicates** - word-set (Jaccard) or sequence similarity of at least 0.82 against existing questions.
-7. **Optional double-check** - a blind re-answer by the model (see above).
+3. **Schema (Pydantic)** - non-empty text; 2-6 options with unique ids and texts; `correct_answer` is a real option; valid difficulty; exact option count.
+4. **Wording** - options not leaked into the question; no "statement + what?" echo questions; the answer is not given away.
+5. **Grounding** - the quoted `source_excerpt` must appear in the source chunk (exact after normalising, or a contiguous match of at least 80%).
+6. **Duplicates** - similar wording (Jaccard / sequence similarity of 0.82 or more) or the same fact asked twice (same answer from the same sentence, or a question asked in reverse).
+7. **Optional double-check** - a blind re-answer by the model.
 
-**What this does and does not prove:** it guarantees well-formed, grounded output. It **cannot prove the marked answer is correct** - a small model can still pick the wrong option. That is why human review is part of the design.
+**What this does and does not prove:** it guarantees well-formed, grounded output. It **cannot prove the marked answer is correct** - that is why human review is part of the design.
+
+**Prompt injection:** `services/material_guard.py` removes sentences in the material that give instructions to the AI ("ignore previous instructions", "reveal your system prompt", ...) before the model sees it, and refuses material that is nothing but such instructions.
 
 ## Measuring LLM performance
-Use the same fixed test set (for example 3 documents x 10 questions) on each model and report hardware and settings.
+`run_evaluation.bat` (or `python evaluation/evaluate_llm.py --models qwen2.5:3b qwen2.5:7b`) runs three suites - a labelled 40-question answering test, a question-generation test on fixed passages and **12 performance metrics** (answer accuracy, F1, answer relevance, faithfulness, hallucination rate, instruction-following, safety attack success rate, task success rate, TTFT p95, end-to-end latency p95, cost per successful task, error rate) - and writes `evaluation/results/comparison_<time>.md`, every metric with its formula and worked calculation. `finetune\compare_finetuned.bat` compares each fine-tuned model with its base model using the same judge.
+See [`evaluation/README.md`](evaluation/README.md) and [`docs/EVALUATION.md`](docs/EVALUATION.md).
 
-| Metric | Formula | Where it comes from |
-|---|---|---|
-| Tokens per second | `eval_count / (eval_duration / 1e9)` | Ollama's response fields |
-| Seconds per accepted question | `total generation time / accepted questions` | Measured |
-| Acceptance rate | `accepted / (accepted + rejected)` | Validator counts |
-| Valid-JSON rate | `parsed replies / total replies` | Parser |
-| Grounding rate | `questions with a verified quote / questions with a quote` | Validator |
-| **Key accuracy** | `keys a human judges correct / keys reviewed` | **Human labelling** (no tool can compute this) |
-| Self-consistency | `"agrees" / questions checked` | Double-check pass |
-
-Sample observations from development (`qwen2.5:3b`, CPU only, small samples - not a benchmark): about 8-10 tokens/s; one run produced 4 valid questions in ~124 s; one 10-question run yielded 8 valid questions from 22 candidates (acceptance about 36%).
-Quiz accuracy (`correct / total x 100`) measures the *student*, not the model.
-
-**Run the evaluation yourself:** `python evaluation/evaluate_llm.py --models qwen2.5:3b qwen2.5:7b` gives each model a labelled 40-question test and prints
-Accuracy, Exact Match, Precision, Recall, F1 (macro / micro / weighted), Top-k, MCC, Cohen's kappa, log loss, Brier score and ECE **with every calculation shown**.
-See [`evaluation/README.md`](evaluation/README.md) for how each metric is computed and how to explain it.
-
-### The 12 performance metrics
-Double-click `run_evaluation.bat`: it runs all tests on both models (each judged by the other) and writes
-`evaluation/results/comparison_<time>.md` plus a report per model. Besides the two tests above it measures Answer Accuracy, F1,
-Answer Relevance, Faithfulness, Hallucination Rate, Instruction-Following, Safety Attack Success Rate, Task Success Rate,
-TTFT p95, End-to-End Latency p95, Cost per Successful Task and Error Rate - each with its formula, the worked calculation,
-sample count and an explicit status when it cannot be computed (`n/a`, never a made-up number).
-Full reference: [`docs/EVALUATION.md`](docs/EVALUATION.md).
-
-### Fine-tuning
-Both models can be fine-tuned for this exact task (QLoRA on a free Kaggle or Colab GPU; SciQ plus filtered questions written by the
-Quality model, all in the app's own prompt and JSON format) and then run locally in Ollama. See
-[`finetune/README.md`](finetune/README.md).
+## Fine-tuning
+Both models were fine-tuned for this exact task with **QLoRA** (4-bit base + LoRA rank 16, Unsloth, one epoch on a free Kaggle T4 GPU) on SciQ, checked teacher questions and answer-check examples - all in the app's own prompt and JSON format - then exported to GGUF and run locally in Ollama. See [`finetune/README.md`](finetune/README.md).
 
 ## Project structure
 ```
 quizforge-mcq-generator/
-|-- app.py                     # Streamlit entry point and navigation
-|-- config.py                  # Environment settings and defaults
-|-- start.bat                  # One-click launcher (Windows)
-|-- requirements.txt  .env.example  pytest.ini  .gitignore
-|-- .streamlit/config.toml     # Light and dark themes
-|-- models/
-|   `-- schemas.py             # Pydantic: Question, Quiz, Attempt, GenerationRequest
+|-- app.py                   # starts the web app (Waitress) and opens the browser
+|-- start.bat                # one-click launcher (Windows)
+|-- setup_models.bat         # installs the base and fine-tuned models
+|-- config.py                # settings, model list, defaults
+|-- requirements.txt  .env.example  pytest.ini
+|-- webapp/
+|   |-- __init__.py          # Flask app factory, security headers
+|   |-- api.py               # JSON API
+|   |-- context.py           # settings, model status and catalogue
+|   |-- jobs.py              # background generation / key-check jobs
+|   `-- static/              # index.html, css/app.css, js/ (app, api, ui, charts, questions, pages/*)
+|-- models/schemas.py        # Pydantic: Question, Quiz, Attempt, GenerationRequest
 |-- services/
-|   |-- ollama_client.py       # Local HTTP client, streaming, status, errors
-|   |-- document_processor.py  # PDF/DOCX/TXT extraction and chunking
-|   |-- question_generator.py  # Prompts, batching, bounded repair loop
-|   |-- question_validator.py  # Parsing, normalisation, validation, duplicates
-|   |-- answer_checker.py      # Optional blind answer-key double-check
-|   |-- quiz_service.py        # QuizSession, scoring, analytics
-|   `-- export_service.py      # JSON, CSV, HTML, PDF
-|-- database/
-|   |-- db.py                  # Connections, transactions, schema
-|   `-- repository.py          # All SQL (parameterised)
-|-- pages/                     # Dashboard, Generate, Question Bank, Quiz, Analytics, Settings, About
-|-- components/                # CSS/themes, sidebar, question cards, charts, downloads
-|-- evaluation/                # LLM performance evaluation (metrics with worked calculations)
-|-- tests/                     # 178 tests (mocked Ollama, headless UI, one live test)
-|-- docs/VIVA_PREP.md          # Jury questions and answers
-`-- data/                      # SQLite database lives here (git-ignored)
+|   |-- ollama_client.py     # local HTTP client, streaming, status, errors
+|   |-- document_processor.py# PDF/DOCX/TXT extraction and chunking
+|   |-- material_guard.py    # removes instructions aimed at the AI
+|   |-- question_generator.py# prompts, batching, bounded repair loop
+|   |-- question_validator.py# parsing, validation, duplicates, casing
+|   |-- answer_checker.py    # blind answer-key double-check
+|   |-- quiz_service.py      # scoring and analytics
+|   `-- export_service.py    # JSON, CSV, HTML, PDF
+|-- database/                # SQLite connection and repository (parameterised SQL)
+|-- evaluation/              # LLM evaluation (12 metrics with worked calculations)
+|-- finetune/                # QLoRA notebook, data preparation, training, Ollama import
+|-- model_files/             # put the fine-tuned .gguf files here (not in git)
+|-- tests/                   # 381 tests (fake Ollama, Flask test client, one live test)
+`-- docs/                    # evaluation guide and viva preparation
 ```
 
 ## Testing
 ```powershell
-python -m pytest -v                          # everything (the live test is skipped if Ollama is not running)
-python -m pytest -m "not integration"        # offline tests only
-python -m pytest tests/test_integration_ollama.py -v -m integration   # live Qwen test
+python -m pytest -q                                   # everything (the live test is skipped without Ollama)
+python -m pytest -m "not integration"                 # offline tests only
+python -m pytest tests/test_web_api.py -v             # the Flask API
 ```
-**178 tests** cover: schema and validation rules, malformed model JSON, duplicate detection, extraction and chunking, scoring (including unanswered questions, retakes and reset), SQLite CRUD and rollback, exports (JSON, CSV, HTML, PDF), the Ollama client (unavailable, timeout, missing model, streaming), generator retry bounds, and headless UI flows with Streamlit's `AppTest` (submit, resume, Stop, draft restore, retry-missed). Ollama is mocked in the unit tests, so no model is needed.
+**381 tests** cover validation rules, malformed model JSON, duplicates and casing, the prompt-injection guard, extraction and chunking, scoring, SQLite CRUD, exports, the Ollama client, generator retry bounds, the evaluation metrics, fine-tuning data preparation, and the whole web API with a fake model (generation jobs, Stop, key checks, quiz lifecycle, scoring, sessions, drafts, analytics, security headers).
 
 ## Privacy and security
-- **No cloud AI.** Inference goes only to the configured Ollama URL; the Settings page warns if it is not on this computer.
-- **Untrusted input.** Uploaded and pasted text may contain instructions; it is delimited as data, the system prompt says to ignore instructions inside it, output must match a schema, and **nothing returned by the model is ever executed**.
-- **Safe rendering.** All model and user text is HTML-escaped; button labels are escaped for markdown/LaTeX.
+- **No cloud AI.** Inference goes only to the configured Ollama URL; Settings warns if it is not on this computer. The server listens on `127.0.0.1` only.
+- **Untrusted input.** Instructions hidden in uploads are removed before the model sees them; output must match a schema; **nothing returned by the model is ever executed**.
+- **Safe rendering.** The front end inserts all text with `textContent`; a strict Content-Security-Policy allows only the app's own scripts and styles.
 - **Safe exports.** CSV cells starting with `=`, `+`, `-`, `@` are neutralised; files are UTF-8 (with BOM for Excel).
-- **Safe storage.** Parameterised SQL, transactions, upload type/size limits. No secrets are stored; `.env` is git-ignored.
+- **Safe storage.** Parameterised SQL, transactions, upload type and size limits. No secrets are stored; `.env` is git-ignored.
 
-## Limitations
-- A small model can write wrong or ambiguous answer keys; automatic checks cannot guarantee correctness.
-- Scanned PDFs need OCR, which is not included.
-- Speed and quality depend on your hardware and model size.
-- Single-user local app; there is no authentication.
+## Limitations and troubleshooting
+- A small model can still write a wrong answer key; automatic checks cannot guarantee correctness.
+- Scanned PDFs need OCR, which is not included. Single-user local app without accounts.
 
-## Roadmap
-OCR for scanned documents - more question types (multi-select, true/false, fill-in) - spaced repetition - multi-user mode - local embeddings for retrieval over very large documents - a built-in benchmark page for model comparison.
-
-## Troubleshooting
 | Problem | Fix |
 |---|---|
-| Sidebar shows **Disconnected** | Start Ollama (app or `ollama serve`); check the URL in Settings; test `curl http://localhost:11434/api/tags` |
-| "The selected AI model is not installed" | Run `ollama pull <tag>` (Settings shows the command) or choose an installed model |
-| Request timed out | Use a smaller model, fewer questions, or raise the timeout in Settings (the first call also loads the model) |
-| Fewer questions than requested | The validator rejected invalid or ungrounded ones - use *Generate the remaining N* or a larger model |
+| Sidebar shows **Ollama not running** | Open the Ollama app (or run `ollama serve`); check the URL in Settings |
+| **Model not installed** | Run `setup_models.bat`, or pick an installed model in Settings |
+| `setup_models.bat` says a `.gguf` file was not found | Copy the file from the team Drive into `model_files` with its exact name |
+| Request timed out | Use a Fast model, fewer questions, or raise the timeout in Settings (the first call also loads the model) |
+| Fewer questions than requested | Some candidates failed validation - press *Generate the remaining N* or use a Quality model |
 | PDF has "no extractable text" | It is a scan; paste the text instead |
-| `pip install` fails on the newest Python | Use Python 3.11 or 3.12 for the virtual environment |
-| `Activate.ps1` is blocked | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
-
-## Further reading
-- [`docs/VIVA_PREP.md`](docs/VIVA_PREP.md) - jury questions and model answers.
-- [Ollama API documentation](https://docs.ollama.com/api) - [Qwen 2.5 on Ollama](https://ollama.com/library/qwen2.5)
+| Port 5000 is busy | `python app.py --port 5050` |
+| `pip install` fails | Use Python 3.11 or 3.12 |
 
 ---
 <div align="center">Built for the Generative AI jury - PS 97</div>

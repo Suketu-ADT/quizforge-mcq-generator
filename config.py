@@ -21,7 +21,7 @@ DEFAULT_BASE_URL = "http://localhost:11434"
 DEFAULT_MODEL = "qwen2.5:3b"
 SUPPORTED_MODELS = ["qwen2.5:3b", "qwen2.5:7b", "qwen2.5:14b"]
 
-# The two models the user can flip between. Tags are shown only on the Settings page; elsewhere the UI
+# The two base models the user can flip between. Tags are shown only on the Settings page; elsewhere the UI
 # uses the tier names ("Fast" / "Quality").
 MODEL_TIERS = [
     {"tier": "Fast", "tag": "qwen2.5:3b", "size": "~2 GB",
@@ -30,6 +30,22 @@ MODEL_TIERS = [
      "blurb": "Slower and needs more RAM, but writes better questions and more accurate answer keys."},
 ]
 TIER_TAGS = {t["tier"]: t["tag"] for t in MODEL_TIERS}
+
+# The same two models after QLoRA fine-tuning for this app's exact task (finetune/README.md). They are not on the
+# Ollama library: each team member imports the .gguf files once with setup_models.bat.
+FINETUNED_TIERS = [
+    {"tier": "Tuned Fast", "tag": "quizforge-3b", "base": "qwen2.5:3b", "size": "~1.9 GB",
+     "gguf": "quizforge-3b.Q4_K_M.gguf",
+     "blurb": "Qwen 2.5 3B fine-tuned for QuizForge. Follows the question format reliably and sticks closer "
+              "to the material than the base model."},
+    {"tier": "Tuned Quality", "tag": "quizforge-7b", "base": "qwen2.5:7b", "size": "~4.7 GB",
+     "gguf": "quizforge-7b.Q4_K_M.gguf",
+     "blurb": "Qwen 2.5 7B fine-tuned for QuizForge. The most accurate option; needs about 8 GB of free RAM."},
+]
+ALL_TIERS = FINETUNED_TIERS + MODEL_TIERS
+# With no model chosen yet (nothing saved, no OLLAMA_MODEL), the first of these that is installed is used.
+AUTO_MODEL_ORDER = ["quizforge-3b", "qwen2.5:3b", "quizforge-7b", "qwen2.5:7b"]
+MODEL_FILES_DIR = BASE_DIR / "model_files"  # where setup_models.bat looks for the fine-tuned .gguf files
 
 ALLOWED_EXTENSIONS = (".pdf", ".docx", ".txt")
 MAX_UPLOAD_MB = 10
