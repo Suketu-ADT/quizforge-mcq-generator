@@ -23,7 +23,7 @@ import shutil
 import time
 from pathlib import Path
 
-from finetune.prepare_data import read_jsonl
+from finetune.prepare_data import is_generation_example, read_jsonl
 
 RESPONSE_PART = "<|im_start|>assistant\n"
 INSTRUCTION_PART = "<|im_start|>user\n"
@@ -51,7 +51,8 @@ def format_check(model, tokenizer, examples: list[dict], max_new_tokens: int = 9
         for raw in items:
             questions += 1
             try:
-                validate_question(raw, num_options=n_opts, source_text=material, require_excerpt=True)
+                validate_question(raw, num_options=n_opts, source_text=material, require_excerpt=True,
+                                  check_wording_rules=True)
                 good += 1
             except QuestionValidationError:
                 pass
@@ -168,7 +169,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.check:
         FastLanguageModel.for_inference(model)
-        report["format_check"] = format_check(model, tokenizer, val_rows[: args.check])
+        report["format_check"] = format_check(model, tokenizer, [r for r in val_rows if is_generation_example(r)][: args.check])
         print("format check (no schema constraint):", json.dumps(report["format_check"], indent=2))
 
     report_path = args.out / f"{args.name}-report.json"

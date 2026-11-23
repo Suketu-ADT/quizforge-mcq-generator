@@ -149,3 +149,88 @@ def test_options_written_inside_question_text_are_rejected():
         validate_question(raw, num_options=4)
     # a normal question mentioning a letter is fine
     assert validate_question(valid_raw(question="What does vitamin A do for the eye?"), num_options=4)
+
+
+# --------------------------------------------------------------------- wording of model-written questions
+def passage(pid):
+    import json
+    from pathlib import Path
+
+    data = json.loads((Path(__file__).parent.parent / "evaluation" / "passages.json").read_text(encoding="utf-8"))
+    return next(p["text"] for p in data["passages"] if p["id"] == pid)
+
+
+def worded(question, options, key="A", excerpt=""):
+    return {"question": question, "options": [{"id": l, "text": t} for l, t in zip("ABCD", options)],
+            "correct_answer": key, "explanation": "", "source_excerpt": excerpt}
+
+
+def check(raw, source):
+    return validate_question(raw, num_options=4, source_text=source, require_excerpt=False, check_wording_rules=True)
+
+
+def test_a_copied_paragraph_is_not_a_question():  # real reply from quizforge-3b, passage P2
+    text = passage("P2")
+    raw = worded("The A* algorithm evaluates each node with the formula f(n) = g(n) + h(n). A* always expands the node "
+                 "with the lowest f(n).", ["A* algorithm", "breadth-first search", "depth-first search", "greedy search"])
+    with pytest.raises(QuestionValidationError, match="does not ask anything"):
+        check(raw, text)
+
+
+def test_a_question_that_contains_its_answer_is_rejected():  # real reply from quizforge-3b, passage P3
+    raw = worded("Chain-of-thought (CoT) prompting makes what type of language model reason step by step before giving "
+                 "the final answer?", ["a language model", "a vision model", "a speech model", "a search engine"])
+    with pytest.raises(QuestionValidationError, match="gives away the answer"):
+        check(raw, passage("P3"))
+
+
+def test_a_question_led_by_a_copied_sentence_is_rejected():  # real reply from quizforge-3b, passage P1
+    raw = worded("Abductive reasoning looks at an observation and infers the most plausible explanation for it. If the "
+                 "road is wet, what is the best explanation?", ["it probably rained", "a pipe burst", "it snowed",
+                                                                 "someone washed a car"])
+    with pytest.raises(QuestionValidationError, match="copied from the material"):
+        check(raw, passage("P1"))
+
+
+@pytest.mark.parametrize("question,options", [
+    ("What type of reasoning infers the most plausible explanation for an observation?",
+     ["abductive", "deductive", "inductive", "analogical"]),
+    ("A doctor sees a fever and a rash and names the most likely illness. Which kind of reasoning is this?",
+     ["abductive", "deductive", "inductive", "analogical"]),  # a scenario written by the model is fine
+    ("Is abductive reasoning about the best explanation or about a general rule?",
+     ["the best explanation", "a general rule", "a past situation", "a proof"]),  # names every choice it offers
+    ("Identify the kind of reasoning that starts from a general rule.", ["deductive", "inductive", "abductive", "analogical"]),
+    ("Reasoning from a general rule to a particular case is called ____.", ["deduction", "induction", "abduction", "analogy"]),
+])
+def test_well_worded_questions_still_pass(question, options):
+    assert check(worded(question, options), passage("P1")).question == question
+
+
+def test_questions_typed_by_a_teacher_are_not_held_to_the_wording_rules():
+    raw = worded("Photosynthesis happens in the chloroplast.", ["true", "false", "only at night", "never"])
+    assert validate_question(raw, num_options=4, source_text=SOURCE).question.startswith("Photosynthesis")
+
+
+# ------------------------------------------------------------------------------ same fact, different words
+def mcq(question, options, key="A"):
+    return Question(question=question, options=[Option(id=l, text=t) for l, t in zip("ABCD", options)], correct_answer=key)
+
+
+def test_the_same_fact_asked_two_ways_is_a_duplicate():  # real pairs from quizforge-7b and quizforge-3b
+    react1 = mcq("What does Re-Act combine?", ["reasoning with acting", "search with planning", "rules with data", "text"])
+    react2 = mcq("ReAct combines reasoning with what?", ["acting", "searching", "planning", "voting"])
+    astar1 = mcq("Which algorithm evaluates each node with the formula f(n) = g(n) + h(n)?",
+                 ["A*", "breadth-first search", "depth-first search", "greedy best-first search"])
+    astar2 = mcq("A* algorithm evaluates each node with what formula?",
+                 ["f(n) = g(n) + h(n)", "f(n) = g(n)", "f(n) = h(n)", "f(n) = g(n) - h(n)"])
+    assert is_duplicate(react2, [react1]) and is_duplicate(astar2, [astar1])
+    assert find_duplicate_pairs([react1, astar1, react2, astar2]) == [(0, 2), (1, 3)]
+
+
+def test_different_facts_are_not_duplicates():
+    bfs1 = mcq("Which algorithm explores a graph level by level?", ["breadth-first search", "A*", "depth-first search", "greedy"])
+    bfs2 = mcq("Which algorithm guarantees the shortest path in unweighted graphs?",
+               ["breadth-first search", "A*", "depth-first search", "greedy"])  # same answer, different fact
+    dfs = mcq("Which algorithm explores one path deeply before backtracking?",
+              ["depth-first search", "A*", "breadth-first search", "greedy"])  # same subject, different answer
+    assert not is_duplicate(bfs2, [bfs1]) and not is_duplicate(dfs, [bfs1, bfs2])

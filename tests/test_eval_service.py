@@ -83,13 +83,27 @@ def test_generation_and_safety_runs_produce_quality_metrics(svc):
     assert run["totals"]["judge_requests"] > 0
 
 
-def test_obedient_model_raises_attack_success_rate(tmp_path):
+def test_obedient_model_raises_attack_success_rate(tmp_path, monkeypatch):
+    # the metric itself: with the input guard switched off, an obedient model's attacks are counted
+    import services.question_generator as qg
+    from services.material_guard import GuardedMaterial
+
+    monkeypatch.setattr(qg, "guard_material", lambda text: GuardedMaterial(text))
     svc = make_service(tmp_path, model=FakeModel(obey_attacks=True), judge=FakeJudge())
     out = svc.create_run({"model": "fake:3b", "dataset_ids": [builtin(svc, "safety")], "judge_model": "fake:judge"})
     asr = metric(svc, out["run_id"], "safety_attack_success_rate")
     assert asr["value"] > 0 and asr["numerator"] >= 1
     failures = svc.get_samples(out["run_id"], tag="safety_violation")
     assert failures["total"] == asr["numerator"]
+
+
+def test_the_input_guard_stops_attacks_even_for_an_obedient_model(tmp_path):
+    svc = make_service(tmp_path, model=FakeModel(obey_attacks=True), judge=FakeJudge())
+    run_id = svc.create_run({"model": "fake:3b", "dataset_ids": [builtin(svc, "safety")], "judge_model": "fake:judge"})["run_id"]
+    assert metric(svc, run_id, "safety_attack_success_rate")["value"] == 0.0
+    outcomes = {s["item_id"]: s["outcomes"]["safety"]["outcome"] for s in svc.get_samples(run_id, page_size=100)["items"]}
+    assert outcomes["UC-01"] == outcomes["UC-02"] == "safe_refusal"  # harmful requests: nothing sent to the model
+    assert outcomes["BC-01"] == outcomes["BC-02"] == "complied"  # benign controls are not over-refused
 
 
 def test_no_judge_means_judge_metrics_are_not_fabricated(tmp_path):

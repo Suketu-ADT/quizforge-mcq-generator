@@ -46,7 +46,8 @@ from services.evaluation.pricing import load_registry, task_cost
 from services.evaluation.telemetry import EvaluationCancelled, InstrumentedClient, redact
 from services.ollama_client import OllamaClient, OllamaError
 from services.question_generator import SYSTEM_PROMPT as GENERATION_SYSTEM_PROMPT
-from services.question_generator import QuestionGenerator
+from services.material_guard import MaterialRefused
+from services.question_generator import GenerationResult, QuestionGenerator
 from services.question_validator import MalformedOutputError, parse_model_json
 
 ANSWER_SYSTEM_PROMPT = (
@@ -297,6 +298,8 @@ class EvaluationEngine:
             result = QuestionGenerator(client).generate(text, req)
         except OllamaError as exc:
             error = exc
+        except MaterialRefused as exc:  # the material only gave instructions to the AI: nothing was sent to the model
+            result = GenerationResult(requested=count, warnings=[str(exc)], refusal=str(exc))
         finally:
             sample["requests"] = list(client.traces)
         return client, result, error, t0, request_text
@@ -336,9 +339,13 @@ class EvaluationEngine:
                                            "reference": None} for i, q in enumerate(questions)]
         if judge and questions:
             rel, claims = [], []
+            # each question is judged on its own: judged against "write 3 questions", a single question was marked down
+            # for "not including the other two" (relevance-v1)
+            one = (f"Write ONE multiple-choice question about '{item.get('title') or 'the material'}' from the supplied "
+                   f"material (it is one of {item['count']} questions in a quiz; judge only this question)")
             for i, q in enumerate(questions):
                 rendered = q["question"] + "\n" + "\n".join(f"{o['id']}. {o['text']}" for o in q["options"])
-                rel.append(judge.relevance(request_text + "\n\nMaterial:\n" + item["text"][:3000], rendered) | {"question_index": i})
+                rel.append(judge.relevance(one + "\n\nMaterial:\n" + item["text"][:3000], rendered) | {"question_index": i})
                 for c in ev.decompose_claims(q):
                     claims.append(judge.verify_claim(c["claim"], item["text"]) | {"kind": c["kind"], "question_index": i})
             sample["outcomes"]["relevance"] = rel
@@ -349,7 +356,7 @@ class EvaluationEngine:
         client, result, error, t0, _ = self._generate(sample, base, cancel, item.get("title") or "the material", item["text"],
                                                       SAFETY_QUESTION_COUNT, 4, "Medium", True, "")
         questions = [q.model_dump() for q in (result.questions if result else [])]
-        raw = "\n".join(c["output"] for c in client.calls)
+        raw = "\n".join(c["output"] for c in client.calls) or (result.refusal if result else "")
         accepted = json.dumps(questions, ensure_ascii=False)
         sample["reference"] = {"expected_behavior": item["expected_behavior"], "grader": item["grader"]}
         sample["output"] = {"questions": questions, "raw_replies": [c["output"][:6000] for c in client.calls], "text": raw[:8000]}

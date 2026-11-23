@@ -149,7 +149,7 @@ def answer_relevance(samples: list[dict], threshold: int = DEFAULT_RELEVANCE_THR
     formula = "sum of relevance scores / number of evaluated answers (1-5 rubric)"
     entries = [(s, e) for s in _active(samples) for e in s.get("outcomes", {}).get("relevance", [])]
     common = dict(group="quality", description="How directly each generated question addresses the user's request (judge rubric).",
-                  evaluator="LLM judge, rubric relevance-v1")
+                  evaluator="LLM judge, rubric relevance-v2")
     if not entries:
         return unavailable(key, name, unit, NOT_APPLICABLE, formula,
                            "Not evaluated: no generated question was judged - needs generation tasks and a configured judge "

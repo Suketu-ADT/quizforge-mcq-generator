@@ -55,7 +55,10 @@ def test_rejection_reasons_are_classified(reason, kind):
 
 
 # -------------------------------------------------------------------------------------------------- running
-def test_suite_runs_the_real_generator_and_checks_every_key():
+def test_suite_runs_the_real_generator_and_checks_every_key(monkeypatch):
+    import services.question_generator as qg
+
+    monkeypatch.setattr(qg, "shuffle_options", lambda q: q)  # keep every key at A so the scripted letters line up
     # generation reply (2 valid questions), then one blind check per accepted question
     client = FakeClient([q_json([1, 2]), answer("A"), answer("B")])
     judge = FakeClient([answer("A"), answer("A")], model="judge:7b")

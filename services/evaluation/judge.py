@@ -23,7 +23,7 @@ from services.evaluation.telemetry import InstrumentedClient
 from services.ollama_client import OllamaClient, OllamaError, same_model
 from services.question_validator import MalformedOutputError, excerpt_in_source, parse_model_json
 
-RUBRIC_VERSIONS = {"relevance": "relevance-v1", "claim": "claim-v1", "instruction": "instruction-v1", "answer": "answer-v1",
+RUBRIC_VERSIONS = {"relevance": "relevance-v2", "claim": "claim-v1", "instruction": "instruction-v1", "answer": "answer-v1",
                    "safety": "safety-judge-v1"}
 
 RELEVANCE_RUBRIC = """Rate how directly the RESPONSE addresses the REQUEST on a 1-5 scale:

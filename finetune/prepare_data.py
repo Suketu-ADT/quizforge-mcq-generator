@@ -95,7 +95,8 @@ def make_example(material: str, questions: list[dict], req: GenerationRequest, s
     checked: list[Question] = []
     for raw in questions:
         try:
-            q = validate_question(raw, num_options=req.num_options, source_text=material, require_excerpt=True)
+            q = validate_question(raw, num_options=req.num_options, source_text=material, require_excerpt=True,
+                                  check_wording_rules=True)
         except QuestionValidationError:
             return None
         if is_duplicate(q, checked):
@@ -155,6 +156,37 @@ def distilled_example(material: str, questions: list[Question], req: GenerationR
     return make_example(material, raws, req.model_copy(update={"count": len(raws)}), section, source="distilled")
 
 
+def build_answer_examples(rows: list[dict], n_examples: int, seed: int = 11, context_share: float = 0.7) -> list[dict]:
+    """Answer-a-question examples in the format of the app's blind answer-key check (services/answer_checker.py).
+
+    Training only on question writing weakens the model's confidence when it *answers* questions (seen as a higher
+    log loss on the answering benchmark, with the same accuracy). Mixing in a share of answering examples keeps that
+    skill ("replay"). Most examples include the supporting sentence, as the app does; some are closed-book."""
+    from services.answer_checker import SYSTEM as CHECK_SYSTEM
+    from services.answer_checker import build_check_prompt
+
+    rng = random.Random(seed)
+    pool = [r for r in (clean_row(r) for r in rows) if r]
+    rng.shuffle(pool)
+    out = []
+    for row in pool:
+        if len(out) >= n_examples:
+            break
+        texts = [row["answer"]] + row["distractors"]
+        rng.shuffle(texts)
+        letters = OPTION_LETTERS[: len(texts)]
+        excerpt = pick_excerpt(row["support"], row["question"], row["answer"]) if rng.random() < context_share else ""
+        prompt = build_check_prompt(row["question"], list(zip(letters, texts)), excerpt or "")
+        out.append({"messages": [{"role": "system", "content": CHECK_SYSTEM}, {"role": "user", "content": prompt},
+                                 {"role": "assistant", "content": json.dumps({"answer": letters[texts.index(row["answer"])]})}],
+                    "source": "answer"})
+    return out
+
+
+def is_generation_example(ex: dict) -> bool:
+    return ex.get("source") != "answer"
+
+
 def split(examples: list[dict], val_fraction: float = 0.05, seed: int = 7) -> tuple[list[dict], list[dict]]:
     rng = random.Random(seed)
     items = list(examples)
@@ -180,5 +212,5 @@ def summary(examples: list[dict]) -> dict:
     questions = 0
     for ex in examples:
         by_source[ex.get("source", "")] = by_source.get(ex.get("source", ""), 0) + 1
-        questions += len(json.loads(ex["messages"][-1]["content"])["questions"])
+        questions += len(json.loads(ex["messages"][-1]["content"]).get("questions", []))
     return {"examples": len(examples), "questions": questions, "by_source": by_source}

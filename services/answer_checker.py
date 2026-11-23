@@ -26,11 +26,16 @@ SYSTEM = (
 )
 
 
+def build_check_prompt(question: str, options: list[tuple[str, str]], excerpt: str = "") -> str:
+    """The user message of the blind answer check (also used to build fine-tuning examples in the same format)."""
+    lines = "\n".join(f"{oid}. {text}" for oid, text in options)
+    context = f"Context: {excerpt}\n\n" if excerpt else ""
+    return f"{context}Question: {question}\n\nOptions:\n{lines}"
+
+
 def check_question(client: OllamaClient, q: Question) -> str:
     """Return "agrees", "disagrees" or "unchecked" (when the reply could not be used)."""
-    options = "\n".join(f"{o.id}. {o.text}" for o in q.options)
-    context = f"Context: {q.source_excerpt}\n\n" if q.source_excerpt else ""
-    prompt = f"{context}Question: {q.question}\n\nOptions:\n{options}"
+    prompt = build_check_prompt(q.question, [(o.id, o.text) for o in q.options], q.source_excerpt)
     reply = client.chat(
         [
             {"role": "system", "content": SYSTEM},
