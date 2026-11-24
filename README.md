@@ -30,13 +30,14 @@ Turn notes, PDFs and documents into validated multiple-choice quizzes - **entire
 4. [How it works](#how-it-works)
 5. [Architecture and API](#architecture-and-api)
 6. [Configuration](#configuration)
-7. [Validation: how answers are checked](#validation-how-answers-are-checked)
-8. [Measuring LLM performance](#measuring-llm-performance)
-9. [Fine-tuning](#fine-tuning)
-10. [Project structure](#project-structure)
-11. [Testing](#testing)
-12. [Privacy and security](#privacy-and-security)
-13. [Limitations and troubleshooting](#limitations-and-troubleshooting)
+7. [Tokens and limits](#tokens-and-limits)
+8. [Validation: how answers are checked](#validation-how-answers-are-checked)
+9. [Measuring LLM performance](#measuring-llm-performance)
+10. [Fine-tuning](#fine-tuning) (results, precision and recall)
+11. [Project structure](#project-structure)
+12. [Testing](#testing)
+13. [Privacy and security](#privacy-and-security)
+14. [Limitations and troubleshooting](#limitations-and-troubleshooting)
 
 ---
 
@@ -147,6 +148,45 @@ Settings come from environment variables (`.env`, created from `.env.example` by
 | `MAX_INPUT_CHARS` | `60000` | Longer input is refused, never silently truncated |
 | `MCQ_DB_PATH` | `data/quizzes.db` | SQLite file location |
 
+## Tokens and limits
+
+A token is a piece of a word the model reads or writes - roughly 3/4 of an English word, about 4 characters. Qwen 2.5 uses a
+byte-level BPE tokenizer with a vocabulary of about 151,000 tokens. Every model call has **input tokens** (system prompt,
+instructions and notes) and **output tokens** (the JSON reply).
+
+| Limit | Value | Where | Why |
+|---|---|---|---|
+| Model's maximum context | 32,768 tokens (Qwen 2.5 3B and 7B) | the model | The most it can handle in one call |
+| Context window for generation (`num_ctx`) | **8,192 tokens** | `services/ollama_client.py` | Prompt + one chunk + reply fit easily; a larger window only costs more RAM (KV cache) |
+| Context for answer checks and the judge | 4,096 tokens | `services/answer_checker.py`, `services/evaluation/judge.py` | These prompts are short |
+| Chunk size | ~3,500 characters (~900 tokens) | `CHUNK_CHARS` in `services/question_generator.py` | Long notes are split, so every prompt stays well inside the window |
+| Maximum input | 60,000 characters (~15,000 tokens) | `MAX_INPUT_CHARS` / Settings | Longer input is refused, never cut silently; it is processed chunk by chunk |
+| Questions per model call | up to 3 | `services/question_generator.py` | Short, reliable JSON replies |
+| Output length when generating | no fixed cap | `services/ollama_client.py` | The model stops at its end token; the JSON schema fixes the structure and the context window is the hard limit |
+| Output length when answering (evaluation) | `num_predict` = 4 tokens | `evaluation/evaluate_llm.py` | Only the option letter is needed, plus its probability (log-probs) |
+| Output length of the speed test | 128 tokens | `evaluation/evaluate_llm.py` | Fixed-length test of tokens per second |
+| Training sequence length | 2,048 tokens | `finetune/train.py` | Longer examples are dropped, never cut off mid-JSON |
+| Format check after training | up to 900 new tokens | `finetune/train.py` | Enough for 3 questions |
+
+**Measured on the CPU-only development laptop (24 Nov 2026, quizforge-3b):**
+
+| Measure | Value |
+|---|---|
+| Tokens per generated question (JSON) | about 155 (1,865 tokens for the 12 questions of the use-case test) |
+| Prompt reading speed | about 242 tokens/s |
+| Writing speed | about 11 tokens/s (3B), about 5 tokens/s (7B) |
+| Tokens in the 12-metric test | model: 64 requests, 17,863 input + 6,475 output tokens; judge: 36 requests, 14,534 tokens |
+
+Reading is about 20 times faster than writing, which is why generation is the slow part on a CPU.
+
+**Is token usage recorded?**
+- **Evaluation runs - yes.** Ollama returns `prompt_eval_count` (input tokens) and `eval_count` (output tokens) with every reply.
+  The evaluation stores them for every request (with time to first token and latency) in `evaluation/results/<model>/report_<time>.json`,
+  prints run totals in the report, and uses them for tokens per second and cost per task. Local models cost nothing per token,
+  so the cost is reported as "n/a" rather than a made-up price.
+- **Web app - live only.** The progress panel shows the tokens written so far ("Batch 1 of 2: 233 tokens written..."); the client
+  adds up input and output tokens internally, but the app does not save a total per generation.
+
 ## Validation: how answers are checked
 Every model reply goes through `services/question_validator.py` before it can be shown:
 
@@ -181,6 +221,8 @@ the 3B pair, `qwen2.5:3b` judges the 7B pair). Training: validation loss 0.765 -
 | Faithfulness (%) | 95.8 | **100.0** | 100.0 | 96.0 | higher |
 | Instruction-following (%) | 96.0 | **100.0** | 98.9 | 100.0 | higher |
 | Answer accuracy (%, 40 labelled MCQs) | 92.5 | **95.0** | 100.0 | 95.0 | higher |
+| Precision (macro) | 0.927 | **0.947** | 1.000 | 0.958 | higher |
+| Recall (macro) | 0.922 | **0.947** | 1.000 | 0.947 | higher |
 | Macro-F1 | 0.923 | **0.947** | 1.000 | 0.949 | higher |
 | MCC | 0.901 | **0.933** | 1.000 | 0.936 | higher |
 | Log loss (calibration) | 0.757 | **0.231** | 0.007 | 0.058 | lower |
@@ -203,6 +245,36 @@ the 3B pair, `qwen2.5:3b` judges the 7B pair). Training: validation loss 0.765 -
 - The datasets are small (40 MCQs, 4 passages, 11 safety cases), so treat the numbers as indicative, not as a benchmark.
   Run `finetune\compare_finetuned.bat` to reproduce them (about 2 hours on a CPU); every metric's formula and worked
   calculation is written to `evaluation/results/`.
+
+#### Precision and recall (40 labelled MCQs)
+
+Answering is treated as a 4-class classification problem: the classes are the option letters A-D and the model's chosen letter
+is its prediction. For each letter, **precision = TP / (TP + FP)** (when the model chose this letter, how often it was right) and
+**recall = TP / (TP + FN)** (of the questions whose answer is this letter, how many it got). Macro values average the four letters
+equally; micro and weighted values are in the reports. An unreadable reply counts as wrong, and 0/0 counts as 0 (as in scikit-learn).
+The correct letters are balanced (A 9, B 10, C 10, D 11), so macro averages are meaningful.
+
+Worked example - quizforge-3b (rows = correct answer, columns = model's answer):
+
+```
+true \ predicted    A    B    C    D
+               A    8    1    0    0
+               B    1    9    0    0
+               C    0    0   10    0
+               D    0    0    0   11
+```
+
+| Letter | TP | FP | FN | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|
+| A | 8 | 1 | 1 | 0.889 | 0.889 | 0.889 |
+| B | 9 | 1 | 1 | 0.900 | 0.900 | 0.900 |
+| C | 10 | 0 | 0 | 1.000 | 1.000 | 1.000 |
+| D | 11 | 0 | 0 | 1.000 | 1.000 | 1.000 |
+| **Macro** | | | | **0.947** | **0.947** | **0.947** |
+
+The base 3B also answered one C question with B (B precision 9/11 = 0.818, C recall 9/10 = 0.900), which gives its lower macro
+precision (0.927) and recall (0.922). The fine-tuned 7B answered C twice when the answer was A or B, so its C precision is
+10/12 = 0.833 and its precision (0.958) is higher than its recall (0.947).
 
 ## Project structure
 ```
