@@ -96,6 +96,8 @@ python app.py                       # options: --port 5050 --no-browser --debug
 | Quality | `qwen2.5:7b` | ~4.7 GB | Base model (also needed to import `quizforge-7b`) |
 
 Model tags are shown only on the Settings page; elsewhere the app uses the names in the first column.
+Recommended: **Tuned Fast** for everyday use (best results of its pair, see [Fine-tuned model results](#fine-tuned-model-results-v2-24-nov-2026)),
+**Quality** (base 7B) when answer accuracy matters most.
 Speed depends on your hardware (on a CPU-only laptop the 3B models write roughly 10-12 tokens/s).
 
 ## How it works
@@ -166,6 +168,41 @@ See [`evaluation/README.md`](evaluation/README.md) and [`docs/EVALUATION.md`](do
 
 ## Fine-tuning
 Both models were fine-tuned for this exact task with **QLoRA** (4-bit base + LoRA rank 16, Unsloth, one epoch on a free Kaggle T4 GPU) on SciQ, checked teacher questions and answer-check examples - all in the app's own prompt and JSON format - then exported to GGUF and run locally in Ollama. See [`finetune/README.md`](finetune/README.md).
+
+### Fine-tuned model results (v2, 24 Nov 2026)
+
+The retrained models (2,147 training examples, including 300 answer-check examples) were compared with their base models by
+`finetune\compare_finetuned.bat`: same datasets, same settings, and the same judge for both sides of each pair (`qwen2.5:7b` judges
+the 3B pair, `qwen2.5:3b` judges the 7B pair). Training: validation loss 0.765 -> 0.220 (3B) and 0.758 -> 0.206 (7B).
+
+| Metric | qwen2.5:3b | **quizforge-3b** | qwen2.5:7b | quizforge-7b | Better |
+|---|---:|---:|---:|---:|---|
+| Hallucination rate (%) | 4.2 | **0.0** | 0.0 | 4.0 | lower |
+| Faithfulness (%) | 95.8 | **100.0** | 100.0 | 96.0 | higher |
+| Instruction-following (%) | 96.0 | **100.0** | 98.9 | 100.0 | higher |
+| Answer accuracy (%, 40 labelled MCQs) | 92.5 | **95.0** | 100.0 | 95.0 | higher |
+| Macro-F1 | 0.923 | **0.947** | 1.000 | 0.949 | higher |
+| MCC | 0.901 | **0.933** | 1.000 | 0.936 | higher |
+| Log loss (calibration) | 0.757 | **0.231** | 0.007 | 0.058 | lower |
+| Acceptance rate of generated questions (%) | 85.7 | **100.0** | 100.0 | 85.7 | higher |
+| Ungrounded candidates (%) | 14.3 | **0.0** | 0.0 | 0.0 | lower |
+| Duplicate candidates (%) | 0.0 | 0.0 | 0.0 | 7.1 | lower |
+| Blind-answer agreement with the judge | 0.92 | **1.00** | 0.92 | 1.00 | higher |
+| Answer relevance (1-5, judge) | **4.17** | 3.64 | 3.92 | 3.25 | higher |
+| Task success rate (%) | 94.5 | 94.5 | 100.0 | 96.4 | higher |
+| Safety attack success rate (%) | 0.0 | 0.0 | 0.0 | 0.0 | lower |
+| End-to-end latency p95 (s) | **47.4** | 64.0 | 98.6 | 112.0 | lower |
+
+**What it means**
+- **quizforge-3b ("Tuned Fast") is the clear win:** 0% hallucination, 100% faithfulness and instruction-following, higher
+  accuracy, much better calibration and every generated candidate accepted. It is the default model when installed.
+- **The 7B base model was already near the ceiling** (100% accuracy, 0% hallucination) and fine-tuning gave it no further gain;
+  for the most accurate answers use the base **Quality** model (`qwen2.5:7b`).
+- Answer relevance is lower for both fine-tuned models. The attack success rate is 0% for all four because the app's
+  prompt-injection guard runs before any model sees the material.
+- The datasets are small (40 MCQs, 4 passages, 11 safety cases), so treat the numbers as indicative, not as a benchmark.
+  Run `finetune\compare_finetuned.bat` to reproduce them (about 2 hours on a CPU); every metric's formula and worked
+  calculation is written to `evaluation/results/`.
 
 ## Project structure
 ```

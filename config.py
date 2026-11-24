@@ -40,7 +40,8 @@ FINETUNED_TIERS = [
               "to the material than the base model."},
     {"tier": "Tuned Quality", "tag": "quizforge-7b", "base": "qwen2.5:7b", "size": "~4.7 GB",
      "gguf": "quizforge-7b.Q4_K_M.gguf",
-     "blurb": "Qwen 2.5 7B fine-tuned for QuizForge. The most accurate option; needs about 8 GB of free RAM."},
+     "blurb": "Qwen 2.5 7B fine-tuned for QuizForge. Perfect output format, but in our tests not more accurate than "
+              "the base Quality model; needs about 8 GB of free RAM."},
 ]
 ALL_TIERS = FINETUNED_TIERS + MODEL_TIERS
 # With no model chosen yet (nothing saved, no OLLAMA_MODEL), the first of these that is installed is used.
